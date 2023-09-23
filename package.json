@@ -1,0 +1,14 @@
+{
+  "name": "itu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nf start"
+  },
+  "devDependencies": {
+    "foreman": "^3.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
