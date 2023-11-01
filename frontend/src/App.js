@@ -1,7 +1,7 @@
 import { useState,useEffect } from 'react'
 import './App.css';
 
-function App() {
+function App({children}) {
   const [test, setTest] = useState([]);
 
   // Modify the current state by setting the new data to
@@ -17,7 +17,10 @@ function App() {
 
   return (
     <div className="App container m-4">
-      {test["data"]}
+      <p>
+        {test["data"]}
+      </p>
+      {children}
     </div>
   );
 }
