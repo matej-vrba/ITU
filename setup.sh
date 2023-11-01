@@ -8,7 +8,7 @@ then
 fi
 }
 check_cmd npx
-check_cmd python
+check_cmd python3
 check_cmd pip
 
 npm i
