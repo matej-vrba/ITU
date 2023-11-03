@@ -5,7 +5,7 @@ function Footer() {
     <div className="products">
       <div className="prod">
         <img alt="" src=""/>
-        <h2>Nějaký název</h2>
+        <h3>Nějaký název</h3>
         <p>
           Nějaký popisek
         </p>
