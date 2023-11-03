@@ -13,7 +13,8 @@ def hello_world():
 @main_page.route("/categories", methods=["GET"], strict_slashes=False)
 def getCategories():
     categories = ["Auto-moto", "Elektro", "Zvířata", "Oblečení", "Zahrada"]
+    categories = categories + categories + categories + categories
 
-    response = jsonify(categories)
+    response = jsonify(categories[:18])
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
