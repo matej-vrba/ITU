@@ -1,8 +1,8 @@
 function Header() {
   return (
-    <p style={{background: 'lightblue'}}>
+    <header>
       Header
-    </p>
+    </header>
   );
 }
 

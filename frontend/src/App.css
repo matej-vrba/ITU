@@ -1,0 +1,9 @@
+@import "_colors.css";
+
+body{
+    background: var(--bg);
+}
+
+footer, header{
+    background: var(--main);
+}
