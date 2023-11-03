@@ -1,0 +1,35 @@
+from app import db
+
+
+advertisment_category = db.Table('advertisment_category',
+                    db.Column('advertisment_id', db.Integer, db.ForeignKey('advertisment.id')),
+                    db.Column('category_id', db.Integer, db.ForeignKey('category.id'))
+                    )
+
+class User(db.Model):
+    __tablename__ = "user"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50),nullable =False,unique=True)
+    email = db.Column(db.String(50),nullable =False,unique=True)
+    password = db.Column(db.String(50),nullable =False,unique=True)
+    advertisments = db.relationship('Advertisment',backref="user",cascade='all, delete')
+
+
+class Category(db.Model):
+    __tablename__ = "category"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50),nullable =False,unique=True)
+    advertisments = db.relationship('Advertisment',secondary=advertisment_category,backref='categories')
+
+
+class Advertisment(db.Model):
+    __advertisment__ = "advertisment"
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(50),nullable =False)
+    description = db.Column(db.String(50))
+    price = db.Column(db.Float)
+    owner = db.Column(db.Integer,db.ForeignKey('user.id'))
+
+
+
+    
