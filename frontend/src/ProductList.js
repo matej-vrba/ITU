@@ -16,9 +16,11 @@ const ProductList = () => {
   },[])
 
   return (
-    <div className="products">
-        <ProductBox
-          item={products}/>
+    <div className='product-list'>
+      <div className="products">
+          <ProductBox
+            item={products}/>
+      </div>
     </div>
   );
 }

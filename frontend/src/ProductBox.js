@@ -1,39 +1,25 @@
+import './ProductBox.css';
 import React, { useState } from "react";
 
 const ProductBox = ({ item }) => {
 
-    //const [valUrlImg, setImage] = useState("Placehoder")
-    const placeholder = "/src/placeholder.svg";
 
     return (
         <>
-            {item.map((product,index) => {
-                return (
-                    <div key={index}>
-                        <div className="prod">
-                            <img
-                                src={placeholder}
-                                className=""
-                                loading="lazy"
-                                width="384"
-                                height="420"
-                            />
+            {item.map((value) => {
 
-                        </div>
-                    <div className="desc">
-                        <a className="openDetail"
-                            //onClick=[() => handleProductItem(index)]}
-                        >
-                            {item}
-                        </a>
-                        <span className="price">0 Kc</span>
-                        <span className="address">Adresa</span>
+            return (
+                <div className="prod openDetail">
+                    <img className="prod-img" src="https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image.png"/>
+                    <div className="prod-text">ProductName</div>
+                    <div className="prod-text ">Price</div>
+                    <div className="prod-text">
+                        <p>Adresa</p>
                     </div>
-                    </div>
-                
-                );
+                </div>
+            );
+        })}
 
-            })}
         </>
     )
 };
