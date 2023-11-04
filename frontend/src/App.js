@@ -4,7 +4,7 @@ import './App.css';
 function App({children}) {
 
   return (
-    <div className="App container m-4">
+    <div className="App  container mx-auto">
       {children}
     </div>
   );

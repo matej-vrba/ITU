@@ -1,8 +1,8 @@
 function Footer() {
   return (
-    <p style={{background: 'lightblue'}}>
+    <footer>
       Footer
-    </p>
+    </footer>
   );
 }
 

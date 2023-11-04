@@ -20,7 +20,7 @@ function Categories() {
 
   return (
     <>
-    <p> Kategorie :3 </p>
+    <h2>Kategorie</h2>
     <div className="categories">
 
       {categories.map(function(cat, i){
