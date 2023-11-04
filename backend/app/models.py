@@ -29,6 +29,9 @@ class Advertisment(db.Model):
     description = db.Column(db.String(50))
     price = db.Column(db.Float)
     owner = db.Column(db.Integer,db.ForeignKey('user.id'))
+    city = db.Column(db.String(50))
+    street = db.Column(db.String(50))
+    address_number = db.Column(db.Integer)
 
 
 
