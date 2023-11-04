@@ -17,11 +17,8 @@ const ProductList = () => {
 
   return (
     <div className="products">
-      <div className="prod">
-      {products.map((product, index) => (
-          <li key={index}>{product}</li>
-        ))}
-      </div>
+        <ProductBox
+          item={products}/>
     </div>
   );
 }
