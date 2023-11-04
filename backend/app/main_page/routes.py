@@ -17,3 +17,10 @@ def getCategories():
     response = jsonify(categories)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+@main_page.route("/products", methods=["GET"], strict_slashes=False)
+def getProducts():
+    products = ["Produkt1", "Produkt2"]
+    response = jsonify(products)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response

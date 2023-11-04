@@ -6,6 +6,8 @@ import Header from './Header';
 import Footer from './Footer';
 import ProductList from './ProductList';
 
+
+
 ReactDOM.render(
   <React.StrictMode>
     <Header/>
