@@ -1,3 +1,9 @@
+/*
+ * Implementation of categories bar.
+ *
+ * Fetches list of categories from backend and displays them in grid.
+ *
+ * */
 import './Categories.css';
 import { useState,useEffect  } from 'react'
 
@@ -23,7 +29,7 @@ function Categories() {
     <h2>Kategorie</h2>
     <div className="categories">
 
-      {categories.map(function(cat, i){
+      {categories.map(function(cat){
         return <a className="category" href="/">
                  {cat}
                </a>
