@@ -1,7 +1,7 @@
 @import "_colors.css";
 
 .product-list {
-	border-color: aqua;
+	display: flex;
 }
 
 .products{
@@ -9,8 +9,6 @@
 	grid-gap: 20px;
 	grid-template-columns: repeat(3, minmax(0, 1fr));
 	grid-template-rows: 380px;
-	border: 2px blue;
-	border-radius: 62px 0 62px 0;
 	margin: 10px;
 	overflow: hidden;
 }

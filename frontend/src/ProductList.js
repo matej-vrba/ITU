@@ -14,7 +14,6 @@ const ProductList = () => {
     .then(response => setProducts(response))
     .catch(error => console.log(error))
   },[])
-
   return (
     <div className='product-list'>
       <div className="products">

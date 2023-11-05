@@ -21,7 +21,8 @@ def getCategories():
 
 @main_page.route("/products", methods=["GET"], strict_slashes=False)
 def getProducts():
-    products = ["Produkt1", "Produkt2"]
-    response = jsonify(products)
+    products = Advertisment.query.all()
+    serialized_products = [product.serialize() for product in products]
+    response = jsonify(serialized_products)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

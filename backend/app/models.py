@@ -9,7 +9,7 @@ advertisment_category = db.Table('advertisment_category',
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50),nullable =False,unique=True)
+    username = db.Column(db.String(50))
     email = db.Column(db.String(50),nullable =False,unique=True)
     password = db.Column(db.String(50),nullable =False,unique=True)
     advertisments = db.relationship('Advertisment',backref="user",cascade='all, delete')
@@ -18,12 +18,25 @@ class User(db.Model):
 class Category(db.Model):
     __tablename__ = "category"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50),nullable =False,unique=True)
+    name = db.Column(db.String(256))
     advertisments = db.relationship('Advertisment',secondary=advertisment_category,backref='categories')
 
 
 class Advertisment(db.Model):
-    __advertisment__ = "advertisment"
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'title': self.title,
+            'description': self.description,
+            'price': self.price,
+            'owner': self.owner,
+            'city': self.city,
+            'street': self.street,
+            'address_number': self.address_number
+            # Přidejte další sloupce podle potřeby
+        }
+    __tablename__ = "advertisment"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(50),nullable =False)
     description = db.Column(db.String(50))
