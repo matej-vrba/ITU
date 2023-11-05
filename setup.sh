@@ -14,3 +14,4 @@ check_cmd pip
 npm i
 (cd backend && ./setup.sh)
 (cd frontend && ./setup.sh)
+./init_db.sh
