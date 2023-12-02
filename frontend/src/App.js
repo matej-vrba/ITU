@@ -8,9 +8,15 @@ import { Outlet } from "react-router-dom";
 
 function App({children}) {
   return (
+    <div className="App">
+        <Outlet />
+    </div>
+  );
+
+  return (
     <>
     <Header/>
-    <div className="App  container mx-auto">
+    <div className="App">
         <Outlet />
     </div>
     <Footer/>

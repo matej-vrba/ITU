@@ -1,10 +1,11 @@
 import './Project.css';
 import { useState,useEffect  } from 'react'
 import { Outlet, Link } from "react-router-dom";
+import PlusIcon from './icons/Plus'
 
 function Projects({params}) {
 
-  const [snippets, setSnippets] = useState([]);
+  const [snippets, setSnippets] = useState([1,2,3,4]);
 
   const addSnippet = () => {
     fetch('http://localhost:5000/newSnippet',{
@@ -18,20 +19,19 @@ function Projects({params}) {
       .catch(error => console.log(error))
   }
 
-  const list = snippets.map(s => <ul><Link to={"/project/" + s}>{s}</Link></ul>)
+  const list = snippets.map(s => <Link draggable="false" className="btn text-left" to={"/project/" + s}>{s}</Link>)
 
   return (
     <>
       <div className="project-container">
         <div className="sidebar">
-          <h2>aaa</h2>
-
-      {list}
-      <button
-        onClick={addSnippet}
-      >new</button>
+          <h2>Code2Gether</h2>
+          <div className="list">
+            <button onClick={addSnippet} >new <PlusIcon/></button>
+            {list}
+          </div>
         </div>
-        <div>
+        <div className="content">
           <Outlet/>
         </div>
       </div>

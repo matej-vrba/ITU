@@ -1,7 +1,13 @@
 @import "_colors.css";
 
+
+*{
+    color: var(--white);
+}
+
 body{
     background: var(--bg);
+    font-family: 'Poppins', sans-serif;
 }
 
 footer, header{
@@ -18,4 +24,127 @@ footer, header{
 .App{
     flex: 1;
     display: flex;
+}
+
+.text-grad{
+	  background: rgb(2,0,36);
+	  background: linear-gradient(90deg, var(--purple-1) 0%, var(--blue-1) 100%);
+	  background-clip: text;
+	  color: transparent;
+}
+
+h2{
+	  color: var(--cyan);
+	  padding: 0.1em;
+}
+
+h3{
+	  color: var(--yellow);
+}
+
+
+.text-left{
+	text-align: start;
+}
+
+
+button, .btn{
+  border: unset;
+  background: unset;
+	margin: 3px;
+	margin-top: 0.4em;
+	text-transform: capitalize;
+	padding:  0.25em 0.7em;
+	border-radius: 0;
+	position: relative;
+  z-index: 3;
+
+	font-size: 0.85rem;
+	color: var(--bg);
+	font-weight: 500;
+  &:focus{
+		box-shadow: none;
+	}
+  &:hover{
+		color: var(--bg);
+	}
+	background: var(--pink);
+}
+
+.list{
+	display: flex;
+	flex-direction: column;
+}
+
+.content{
+	padding: 1.5em 1em;
+	min-width: 60%;
+	margin: 0 auto;
+}
+
+
+code{
+	table{
+		width: 100%;
+	}
+
+	tr{
+		&:first-child{
+			background: var(--bg-4);
+			div{
+				display: flex;
+				justify-content: space-between;
+				span{
+					margin-left: 1em;
+					margin-right: 1em;
+				}
+			}
+			&:hover{
+				background: var(--bg-4);
+			}
+		}
+		td:first-child{
+			width: 4ch;
+			text-align: end;
+			border-right: 2px solid var(--bg-4);
+			padding: 0 0.2em;
+		}
+		background: var(--bg-alt);
+		&:hover{
+			background: var(--bg-3);
+		}
+		pre{
+			margin-bottom: unset;
+			padding-left: 0.5em;
+			padding-right: 0.5em;
+		}
+
+		td:nth-child(1){
+			user-select: none;
+		}
+	}
+}
+
+.project-container{
+	display: flex;
+	min-height: 100%;
+	width: 100%;
+	.sidebar{
+		background: var(--bg-alt);
+	}
+}
+
+.icon-svg{
+	path{
+
+    fill:none;
+stroke:#0b090a;
+stroke-width:7;
+stroke-linecap:round;
+stroke-linejoin:round;
+stroke-dasharray:none;
+stroke-opacity:1;
+
+}
+
 }
