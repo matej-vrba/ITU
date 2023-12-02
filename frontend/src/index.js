@@ -1,21 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import Categories from './Categories';
-import Header from './Header';
-import Footer from './Footer';
-import ProductList from './ProductList';
+import Project from './Project';
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 
 
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App/>,
+  }
+]);
 
 ReactDOM.render(
   <React.StrictMode>
-    <Header/>
-    <App>
-      <Categories/>
-      <ProductList/>
-    </App>
-    <Footer/>
+    <RouterProvider router={router} />
   </React.StrictMode>,
   document.getElementById('root')
 );
