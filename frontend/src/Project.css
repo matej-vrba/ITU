@@ -1,0 +1,11 @@
+.sidebar{
+	background: lightgray;
+	display: inline-block;
+	width: fit-content;
+	min-width: 15em;
+}
+
+.project-container{
+	display: flex;
+	min-height: 100%;
+}

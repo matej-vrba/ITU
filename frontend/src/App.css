@@ -14,3 +14,8 @@ footer, header{
     justify-content: space-between;
     min-height: 100vh;
 }
+
+.App{
+    flex: 1;
+    display: flex;
+}

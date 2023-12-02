@@ -26,3 +26,13 @@ def getProducts():
     response = jsonify(serialized_products)
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
+
+i = 1;
+
+@main_page.route("/newSnippet", methods=["GET"], strict_slashes=False)
+def newSnippet():
+    global i
+    i += 1
+    response = jsonify(i)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
