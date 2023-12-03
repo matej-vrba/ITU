@@ -163,7 +163,10 @@ code{
 
 	tr{
 		&:first-child{
-			background: var(--bg-4);
+			background: var(--yellow);
+			*{
+				color: var(--bg);
+			}
 			div{
 				display: flex;
 				justify-content: space-between;
@@ -173,7 +176,7 @@ code{
 				}
 			}
 			&:hover{
-				background: var(--bg-4);
+			background: var(--yellow);
 			}
 		}
 		td:first-child{
