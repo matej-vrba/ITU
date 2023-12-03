@@ -27,6 +27,7 @@ def getProducts():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+
 i = 4;
 
 @main_page.route("/newSnippet", methods=["GET"], strict_slashes=False)

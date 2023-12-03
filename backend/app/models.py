@@ -1,6 +1,5 @@
 from app import db
 
-
 advertisment_category = db.Table('advertisment_category',
                     db.Column('advertisment_id', db.Integer, db.ForeignKey('advertisment.id')),
                     db.Column('category_id', db.Integer, db.ForeignKey('category.id'))
@@ -45,7 +44,3 @@ class Advertisment(db.Model):
     city = db.Column(db.String(50))
     street = db.Column(db.String(50))
     address_number = db.Column(db.Integer)
-
-
-
-    

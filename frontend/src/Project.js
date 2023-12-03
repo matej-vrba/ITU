@@ -4,12 +4,32 @@ import { Outlet, NavLink, Link, useParams } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
 import {DataContext} from './index'
+import {socket} from "./socket"
+
 
 function Projects({params}) {
-  const [snippets, setSnippets] = useState([1,2,3,4]);
+  const [snippets, setSnippets] = useState([]);
+
+  useEffect(
+    () => {
+      socket.on('all-snippets', function(msg) {
+        setSnippets([...msg['snippets']])
+        console.log();
+      });
+
+      socket.on('new-snippet', function(msg) {
+        setSnippets([...snippets, msg['snippet']])
+        console.log();
+      });
+    }
+  )
 
 
   const addSnippet = () => {
+    socket.timeout(5000).emit('add-snippet', () => {
+    });
+    return
+
     fetch('http://localhost:5000/newSnippet',{
       'methods':'GET'
     })
