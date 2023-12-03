@@ -22,14 +22,14 @@ const InlineEdit = ({ value, setValue }) => {
 
 function ProjectDetail({params}) {
   const { a } = useLoaderData();
-  const [info, infoSet] = useOutletContext();
+  const [title, setTitleCallback] = useOutletContext();
   //var [info, setInfo] = React.useContext(DataContext)
 
   //const info = React.useContext(DataContext)
 
   return (
     <>
-      <h3><InlineEdit value={info} setValue={infoSet} /></h3>
+      <h3><InlineEdit value={title} setValue={setTitleCallback} /></h3>
 
       <code>
         <table>

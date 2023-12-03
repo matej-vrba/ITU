@@ -24,49 +24,37 @@ function Projects({params}) {
   }
 
   let { snippetId } = useParams();
-  var [info, setInfo] = useState(snippets[snippetId-1]);
-  Projects.i = setInfo;
+  var [title, setTitle] = useState(snippets[snippetId-1]);
+  Projects.setTitle = setTitle;
 
   useEffect(() => {
-    console.log('Count is now: ', info);
-    if( Projects.i != undefined ){
-      Projects.i(info);
+    if( Projects.setTitle != undefined ){
+      Projects.setTitle(title);
     }
-  }, [info]);
+  }, [title]);
 
   const list = snippets.map(s =>
     {
-      const [ss, sets] = useState(s);
-
-      useEffect(() => {
-        console.log('aaa', ss);
-      }, [ss]);
 
       return(
         <NavLink draggable="false"
               className="btn text-left"
               to={"/project/" + s}
               onClick={()=>{
-                setInfo(ss);
-                Projects.i = sets;
+                setTitle(s);
               }
                       }
         >
-          {ss}
+          {s}
         </NavLink>
       )
     }
   )
 
-  const infoSet = (a)=>{
+  const setTitleCallback = (a)=>{
     document.getElementById("snippetList").getElementsByClassName("active")[0].innerText = a;
-    setInfo(a);
+    setTitle(a);
   }
-
-  //var [info, setInfo] = React.useContext(DataContext)
-
-//  [info, setInfo] = useState('aaa');
-  //info = "aa";
 
   return (
     <>
@@ -81,7 +69,7 @@ function Projects({params}) {
           </div>
         </div>
         <div className="content">
-          <Outlet context={[info, infoSet]}/>
+          <Outlet context={[title, setTitleCallback]}/>
         </div>
       </div>
     </>
