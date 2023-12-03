@@ -1,4 +1,7 @@
 from app import db
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
+from sqlalchemy import String
 
 advertisment_category = db.Table('advertisment_category',
                     db.Column('advertisment_id', db.Integer, db.ForeignKey('advertisment.id')),
@@ -12,6 +15,12 @@ class User(db.Model):
     email = db.Column(db.String(50),nullable =False,unique=True)
     password = db.Column(db.String(50),nullable =False,unique=True)
     advertisments = db.relationship('Advertisment',backref="user",cascade='all, delete')
+
+class Snippet(db.Model):
+    __tablename__ = "snippets"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(150))
 
 
 class Category(db.Model):
