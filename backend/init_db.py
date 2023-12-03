@@ -12,11 +12,12 @@ with app.app_context():
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {
-    printf("Hello world\\\\n")
+    printf("Hello world\\n")
     return 0;
 }"""
                            ))
-    db.session.add(Snippet(title="Another snippet", created_at=datetime.today(), code="""#include <iostream>
+    db.session.add(Snippet(title="Another snippet", created_at=datetime.today(), code="""//Sample code
+#include <iostream>
 
 int main(int argc, char *argv[]) {
 	std::cout << "Hello world" << std::endl;
