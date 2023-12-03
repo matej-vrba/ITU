@@ -130,6 +130,10 @@ button, .btn{
 			color: var(--bg);
 		}
 
+
+}
+
+.cut-corner{
 	&:before{
 			content: " ";
 			width: 5em;
@@ -137,21 +141,22 @@ button, .btn{
 			position: absolute;
 			top: 0;
 			right: 0;
-
-			background: red;
 			background: var(--bg);
 		}
 	 &:before{
 			transform: translateX(80%) translateY(-60%) rotate(45deg)  ;
 }
-
 }
 
-.comment-wrapper{
+.hide-overflow{
 	overflow: hidden;
 	padding: 10px;
 }
 
+.code-wrapper{
+	padding: 10px;
+	overflow: hidden;
+}
 
 code{
 	margin-bottom: 2em;
@@ -164,6 +169,7 @@ code{
 	tr{
 		&:first-child{
 			background: var(--yellow);
+			position: relative;
 			*{
 				color: var(--bg);
 			}
