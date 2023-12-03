@@ -83,6 +83,21 @@ button, .btn{
 		color: var(--bg);
 	}
 	background: var(--pink);
+	&.active:after, &.active:before{
+			content: " ";
+			width: 5em;
+			height: 5em;
+			position: absolute;
+			right: 0;
+			transform: translateX(60%) rotate(45deg)  ;
+			background: var(--bg-alt);;
+		}
+	&.active:after{
+			top: -220%;
+		}
+	&.active:before{
+			bottom: -220%;
+		}
 }
 
 .list{
