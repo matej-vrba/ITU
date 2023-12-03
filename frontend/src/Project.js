@@ -1,6 +1,6 @@
 import './Project.css';
 import { useState,useEffect  } from 'react'
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, NavLink, Link, useParams } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
 import {DataContext} from './index'
@@ -28,23 +28,16 @@ function Projects({params}) {
       .catch(error => console.log(error))
   }
 
-  var [info, setInfo] = useState('aaa');
+  let { snippetId } = useParams();
+  var [info, setInfo] = useState(snippets[snippetId-1]);
+  Projects.i = setInfo;
 
-  //var [info, setInfo] = React.useContext(DataContext)
-  console.log("render", setInfo);
-  if(setInfo == null){
-    setInfo = ()=>{}
-  }
-  useEffect(() => {
-    console.log('Count is now: ', info);
-  }, [setInfo]);
   useEffect(() => {
     console.log('Count is now: ', info);
     if( Projects.i != undefined ){
       Projects.i(info);
     }
   }, [info]);
-  console.log("render", setInfo);
 
   const list = snippets.map(s =>
     {
@@ -55,53 +48,39 @@ function Projects({params}) {
       }, [ss]);
 
       return(
-        <Link draggable="false"
+        <NavLink draggable="false"
               className="btn text-left"
               to={"/project/" + s}
               onClick={()=>{
                 setInfo(ss);
-                setInfo = sets;
-                console.log("aabbcc");
-
                 Projects.i = sets;
               }
                       }
         >
-          {ss}</Link>
+          {ss}
+        </NavLink>
       )
     }
   )
 
-function useForceUpdate(){
-    const [value, setValue] = useState(0); // integer state
-    return () => setValue(value => ++value); // update the state to force render
-}
-    const forceUpdate = useForceUpdate();
   const infoSet = (a)=>{
-    forceUpdate();
-
-    console.log("aa", a);
+    document.getElementById("snippetList").getElementsByClassName("active")[0].innerText = a;
     setInfo(a);
   }
-  useEffect((a) => {
-    console.log("finaly?", Projects.i);
-    console.log("finaly?", a);
-  }, [infoSet]);
-
 
   //var [info, setInfo] = React.useContext(DataContext)
 
 //  [info, setInfo] = useState('aaa');
   //info = "aa";
 
-  console.log("bb", infoSet);
   return (
     <>
       <div className="project-container">
-      <p> {info} </p>
+        <p>
+        </p>
         <div className="sidebar">
           <h2>Code2Gether</h2>
-          <div className="list">
+          <div id="snippetList" className="list">
             <button onClick={addSnippet} >new <PlusIcon/></button>
             {list}
           </div>
