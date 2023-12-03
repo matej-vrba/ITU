@@ -5,7 +5,7 @@ from app.models import Snippet
 from sqlalchemy import select,insert,update
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
-
+from datetime import datetime
 
 
 
@@ -15,13 +15,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 if __name__ == '__main__':
     app.run(debug=True)
 
-i = 4;
-
-def fakeData(i):
-    return {'id': i, 'title': chr(ord('a') + i)}
-
 def snippetToJsObj(s):
-    return {'id': s.id, 'title': s.title}
+    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y')}
 
 @socketio.on('connect')
 def connect_list_snippets():
@@ -35,7 +30,7 @@ def connect_list_snippets():
 @socketio.on('add-snippet')
 def connect_list_snippets():
     s = db.session.scalar(insert(Snippet).returning(Snippet),
-                           [{'title': "New snippet"}])
+                           [{'title': "New snippet", "created_at": datetime.today()}])
     db.session.commit()
     emit('new-snippet', snippetToJsObj(s), broadcast=True)
 

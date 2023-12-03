@@ -21,6 +21,7 @@ class Snippet(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(150))
+    created_at = db.Column(db.Date())
 
 
 class Category(db.Model):

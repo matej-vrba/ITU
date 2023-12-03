@@ -72,6 +72,7 @@ h3{
 
 button, .btn{
   white-space: nowrap;
+  text-overflow: ellipsis;
   border: unset;
   background: unset;
   overflow: hidden;

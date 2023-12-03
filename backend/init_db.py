@@ -1,5 +1,6 @@
 from app import db, create_app
 from app.models import User,Advertisment,Category,Snippet
+from datetime import datetime
 
 app = create_app()
 
@@ -7,9 +8,9 @@ with app.app_context():
     # Create the tables
     db.create_all()
 
-    db.session.add(Snippet(title="A snippet"))
-    db.session.add(Snippet(title="Another snippet"))
-    db.session.add(Snippet(title="Guess what!!! another snippet"))
+    db.session.add(Snippet(title="A snippet", created_at=datetime.today()))
+    db.session.add(Snippet(title="Another snippet", created_at=datetime.today()))
+    db.session.add(Snippet(title="Guess what!!! another snippet", created_at=datetime.today()))
 
     #user0 = User(username="xname00", password="heslo00", email="xlog00@email.cz,")
     #user1 = User(username="xname01", password="heslo01", email="xlog01@email.cz,")

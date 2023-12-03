@@ -1,6 +1,8 @@
 from flask import Blueprint,jsonify
 from app import db
 from app.models import User,Advertisment,Category
+from sqlalchemy import select
+from app.models import Snippet
 
 main_page = Blueprint('main_page', __name__)
 
@@ -28,12 +30,12 @@ def getProducts():
     return response
 
 
-i = 4;
+def snippetToJsObj(s):
+    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y')}
 
-@main_page.route("/newSnippet", methods=["GET"], strict_slashes=False)
-def newSnippet():
-    global i
-    i += 1
-    response = jsonify(i)
+@main_page.route("/snippets/<snippet_id>", methods=["GET"], strict_slashes=False)
+def getSnippets(snippet_id):
+    s = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first()
+    response = jsonify(snippetToJsObj(s))
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response

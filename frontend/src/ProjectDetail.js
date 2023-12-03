@@ -51,6 +51,17 @@ function ProjectDetail({params}) {
     }
   )
 
+  const [date, setDate] = useState([]);
+
+  useEffect(()=>{
+    fetch('http://localhost:5000/snippets/' + id,{
+      'methods':'GET'
+    })
+      .then(response => response.json())
+      .then(response => {setDate(response['created_at'])})
+    .catch(error => console.log(error))
+  },[])
+
 
   return (
     <>
@@ -58,7 +69,7 @@ function ProjectDetail({params}) {
 
       <code>
         <table>
-          <tr><th colspan="2"><div><span>C</span><span>2.12.2023</span></div></th></tr>
+          <tr><th colspan="2"><div><span>C</span><span>{date}</span></div></th></tr>
           <tr><td>01</td><td><pre>// sample code</pre></td></tr>
           <tr><td>02</td><td><pre>#include &#60;stdio.h&#62;</pre></td></tr>
           <tr><td>03</td><td><pre> </pre></td></tr>
