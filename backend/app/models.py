@@ -1,7 +1,7 @@
 from app import db
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy import String
+from sqlalchemy import String, UnicodeText
 
 advertisment_category = db.Table('advertisment_category',
                     db.Column('advertisment_id', db.Integer, db.ForeignKey('advertisment.id')),
@@ -22,6 +22,7 @@ class Snippet(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(150))
     created_at = db.Column(db.Date())
+    code = db.Column(db.UnicodeText())
 
 
 class Category(db.Model):

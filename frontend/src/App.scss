@@ -122,7 +122,7 @@ button, .btn{
 	flex: 6;
 }
 
-.comment{
+.comments .comment{
 	position: relative;
 	background: var(--white);
 	margin-bottom: 1em;
@@ -164,57 +164,41 @@ button, .btn{
 }
 
 .code-wrapper{
-	padding: 10px;
-	overflow: hidden;
-}
-
-code{
 	margin-bottom: 2em;
-	display: block;
+	padding: 0;
 	box-shadow: 10px 10px 0px 0px var(--bg-4);
-	table{
-		width: 100%;
-	}
-
-	tr{
-		&:first-child{
-			background: var(--yellow);
-			position: relative;
-			*{
-				color: var(--bg);
-			}
-			div{
-				display: flex;
-				justify-content: space-between;
-				span{
-					margin-left: 1em;
-					margin-right: 1em;
-				}
+}
+.code-line{
+	background: var(--yellow);
+	display: flex;
+	justify-content: space-between;
+	font-weight: 500;
+	.lang{
+			margin-left: 1em;
+		}
+	.date{
+			margin-right: 1em;
+		}
+	*{
+			color: var(--bg);
+		}
+}
+pre{
+	background: var(--bg-alt) !important;
+	margin: 0;
+code{
+	&>span{
+			width: 100%;
+			display: block;
+			&>span:first-child{
+				border-right: 3px solid var(--gray);
+				margin-right: 0.2em;
 			}
 			&:hover{
-			background: var(--yellow);
+				background: var(--bg-4);
 			}
 		}
-		td:first-child{
-			width: 4ch;
-			text-align: end;
-			border-right: 2px solid var(--bg-4);
-			padding: 0 0.2em;
-		}
-		background: var(--bg-alt);
-		&:hover{
-			background: var(--bg-3);
-		}
-		pre{
-			margin-bottom: unset;
-			padding-left: 0.5em;
-			padding-right: 0.5em;
-		}
-
-		td:nth-child(1){
-			user-select: none;
-		}
-	}
+}
 }
 
 .project-container{

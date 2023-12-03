@@ -8,9 +8,25 @@ with app.app_context():
     # Create the tables
     db.create_all()
 
-    db.session.add(Snippet(title="A snippet", created_at=datetime.today()))
-    db.session.add(Snippet(title="Another snippet", created_at=datetime.today()))
-    db.session.add(Snippet(title="Guess what!!! another snippet", created_at=datetime.today()))
+    db.session.add(Snippet(title="A snippet", created_at=datetime.today(), code="""//sample code
+#include <stdio.h>
+
+int main(int argc, char *argv[]) {
+    printf("Hello world\\\\n")
+    return 0;
+}"""
+                           ))
+    db.session.add(Snippet(title="Another snippet", created_at=datetime.today(), code="""#include <iostream>
+
+int main(int argc, char *argv[]) {
+	std::cout << "Hello world" << std::endl;
+    return 0;
+}"""))
+    db.session.add(Snippet(title="Guess what!!! another snippet", created_at=datetime.today(), code="""//Sample code
+fn main() {
+    println!("Hello World!");
+}
+    """))
 
     #user0 = User(username="xname00", password="heslo00", email="xlog00@email.cz,")
     #user1 = User(username="xname01", password="heslo01", email="xlog01@email.cz,")

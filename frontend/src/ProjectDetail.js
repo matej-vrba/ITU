@@ -3,6 +3,8 @@ import DataContext from './Project';
 import React, { useState,useEffect  } from 'react';
 import './Categories.css';
 import {socket} from "./socket"
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -39,7 +41,6 @@ function ProjectDetail({params}) {
   const { id } = useLoaderData();
   const [title, setTitle] = useOutletContext();
   //var [info, setInfo] = React.useContext(DataContext)
-
   //const info = React.useContext(DataContext)
   useEffect(
     () => {
@@ -52,47 +53,48 @@ function ProjectDetail({params}) {
   )
 
   const [date, setDate] = useState([]);
+  const [code, setCode] = useState([]);
 
   useEffect(()=>{
     fetch('http://localhost:5000/snippets/' + id,{
       'methods':'GET'
     })
       .then(response => response.json())
-      .then(response => {setDate(response['created_at'])})
+      .then(response => {setDate(response['created_at'])
+                         setCode(response['code'])
+                        })
     .catch(error => console.log(error))
-  },[])
+  },[id])
 
 
   return (
     <>
       <h3><InlineEdit value={title} setValue={setTitle} titleId={id} /></h3>
 
-      <code>
-        <table>
-          <tr><th colspan="2"><div><span>C</span><span>{date}</span></div></th></tr>
-          <tr><td>01</td><td><pre>// sample code</pre></td></tr>
-          <tr><td>02</td><td><pre>#include &#60;stdio.h&#62;</pre></td></tr>
-          <tr><td>03</td><td><pre> </pre></td></tr>
-          <tr><td>04</td><td><pre>int main(int argc, char *argv[])  &#123;</pre></td></tr>
-          <tr><td>05</td><td><pre>	return 0;</pre></td></tr>
-          <tr><td>06</td><td><pre>&#125;</pre></td></tr>
-        </table>
-      </code>
-      <div className="hide-overflow">
-      <div className="comment cut-corner">
-        <h4>Někdo</h4>
-        <p>
-          Může mi někdo vysvětlit 3. řádek?
-        </p>
+      <div className="code-wrapper">
+        <div className="code-line"><span className="lang">C</span><span className="date">{date}</span></div>
+        <SyntaxHighlighter preTag={<p>aa</p>} wrapLines="true" showLineNumbers="true" language="javascript" style={monokai}>
+          {code}
+        </SyntaxHighlighter>
       </div>
-      </div>
-      <div className="hide-overflow">
-      <div className="comment cut-corner">
-        <h4>Někdo jinej</h4>
-        <p>
-          Nepotřebuješ chápat
-        </p>
-      </div>
+      <div className="comments">
+
+        <div className="hide-overflow">
+          <div className="comment cut-corner">
+            <h4>Někdo</h4>
+            <p>
+              Může mi někdo vysvětlit 3. řádek?
+            </p>
+          </div>
+        </div>
+        <div className="hide-overflow">
+          <div className="comment cut-corner">
+            <h4>Někdo jinej</h4>
+            <p>
+              Nepotřebuješ chápat
+            </p>
+          </div>
+        </div>
       </div>
     </>
   )
