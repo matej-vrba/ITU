@@ -1,17 +1,36 @@
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useOutletContext } from "react-router-dom";
+import DataContext from './Project';
+import React, { useState,useEffect  } from 'react';
 import './Categories.css';
-import { useState,useEffect  } from 'react'
 
 export async function loader({ params }) {
   var a = params.snippetId;
+
   return { a };
+}
+const InlineEdit = ({ value, setValue }) => {
+  const onChange = (event) => setValue(event.target.value);
+  return (
+    <input
+      type="text"
+      aria-label="Field name"
+      value={value}
+      onChange={onChange}
+    />
+  )
 }
 
 function ProjectDetail({params}) {
   const { a } = useLoaderData();
+  const [info, infoSet] = useOutletContext();
+  //var [info, setInfo] = React.useContext(DataContext)
+
+  //const info = React.useContext(DataContext)
+
   return (
     <>
       <h3>A snippet title</h3>
+      <InlineEdit value={info} setValue={infoSet} />
       <code>
         <table>
           <tr><th colspan="2"><div><span>C</span><span>2.12.2023</span></div></th></tr>
@@ -24,6 +43,7 @@ function ProjectDetail({params}) {
         </table>
       </code>
       <p>
+        { info }
         { a }
       </p>
       <p>

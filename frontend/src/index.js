@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState,useEffect  } from 'react'
 import ReactDOM from 'react-dom';
 import App from './App';
 import Project from './Project';
@@ -8,6 +9,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+export var DataContext = React.createContext([null, ()=>{}]);
 
 const router = createBrowserRouter([
   {
@@ -31,7 +33,9 @@ const router = createBrowserRouter([
 
 ReactDOM.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <DataContext.Provider value={[null, null]}>
+      <RouterProvider router={router} />
+    </DataContext.Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
