@@ -112,8 +112,51 @@ button, .btn{
 	flex: 6;
 }
 
+.comment{
+	position: relative;
+	background: var(--white);
+	margin-bottom: 1em;
+	box-shadow: 10px 10px 0px 0px var(--bg-4);
+	h4{
+			font-size: 1.1em;
+			padding: 0.25em 0.5em;
+			background: var(--green);
+		}
+	p{
+			padding-left: 0.75em;
+			padding-bottom: 0.25em;
+		}
+	*{
+			color: var(--bg);
+		}
+
+	&:before{
+			content: " ";
+			width: 5em;
+			height: 5em;
+			position: absolute;
+			top: 0;
+			right: 0;
+
+			background: red;
+			background: var(--bg);
+		}
+	 &:before{
+			transform: translateX(80%) translateY(-60%) rotate(45deg)  ;
+}
+
+}
+
+.comment-wrapper{
+	overflow: hidden;
+	padding: 10px;
+}
+
 
 code{
+	margin-bottom: 2em;
+	display: block;
+	box-shadow: 10px 10px 0px 0px var(--bg-4);
 	table{
 		width: 100%;
 	}

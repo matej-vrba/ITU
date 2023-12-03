@@ -42,9 +42,22 @@ function ProjectDetail({params}) {
           <tr><td>06</td><td><pre>&#125;</pre></td></tr>
         </table>
       </code>
-      <p>
-        :3
-      </p>
+      <div className="comment-wrapper">
+      <div className="comment">
+        <h4>Někdo</h4>
+        <p>
+          Může mi někdo vysvětlit 3. řádek?
+        </p>
+      </div>
+      </div>
+      <div className="comment-wrapper">
+      <div className="comment">
+        <h4>Někdo jinej</h4>
+        <p>
+          Nepotřebuješ chápat
+        </p>
+      </div>
+      </div>
     </>
   )
 }
