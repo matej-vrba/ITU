@@ -26,6 +26,14 @@ footer, header{
     display: flex;
 }
 
+.conn-status{
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	background: var(--red);
+	font-size: 0.8em;
+}
+
 .text-grad{
 	  background: rgb(2,0,36);
 	  background: linear-gradient(90deg, var(--purple-1) 0%, var(--blue-1) 100%);

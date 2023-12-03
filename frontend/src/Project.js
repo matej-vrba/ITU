@@ -14,33 +14,22 @@ function Projects({params}) {
     () => {
       socket.on('all-snippets', function(msg) {
         setSnippets([...msg['snippets']])
-        console.log();
       });
 
       socket.on('new-snippet', function(msg) {
-        setSnippets([...snippets, msg['snippet']])
-        console.log();
+        setSnippets([...snippets, msg])
+      });
+      socket.on('set-snippet-title', function(msg) {
+        let a = snippets;
+        a[msg['id']] = msg;
+        setSnippets(a);
       });
     }
   )
 
 
   const addSnippet = () => {
-    socket.timeout(5000).emit('add-snippet', () => {
-    });
-    return
-
-    fetch('http://localhost:5000/newSnippet',{
-      'methods':'GET'
-    })
-      .then(response => response.json())
-      .then(response => {setSnippets([
-        ...snippets,
-        response
-      ])}
-
-           )
-      .catch(error => console.log(error))
+    socket.timeout(5000).emit('add-snippet', () => {});
   }
 
   let { snippetId } = useParams();
@@ -59,22 +48,17 @@ function Projects({params}) {
       return(
         <NavLink draggable="false"
               className="btn text-left"
-              to={"/project/" + s}
+              to={"/project/" + s['id']}
               onClick={()=>{
-                setTitle(s);
+                setTitle(s['title']);
               }
                       }
         >
-          {s}
+          {s['title']}
         </NavLink>
       )
     }
   )
-
-  const setTitleCallback = (a)=>{
-    document.getElementById("snippetList").getElementsByClassName("active")[0].innerText = a;
-    setTitle(a);
-  }
 
   return (
     <>
@@ -89,7 +73,7 @@ function Projects({params}) {
           </div>
         </div>
         <div className="content">
-          <Outlet context={[title, setTitleCallback]}/>
+          <Outlet context={[title, setTitle]}/>
         </div>
       </div>
     </>

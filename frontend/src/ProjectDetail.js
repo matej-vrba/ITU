@@ -2,34 +2,59 @@ import { useLoaderData, useOutletContext } from "react-router-dom";
 import DataContext from './Project';
 import React, { useState,useEffect  } from 'react';
 import './Categories.css';
+import {socket} from "./socket"
 
 export async function loader({ params }) {
-  var a = params.snippetId;
+  var id = params.snippetId;
 
-  return { a };
+  //socket.timeout(5000).emit('get-snippet-title', id, () => {});
+
+  return { id };
 }
-const InlineEdit = ({ value, setValue }) => {
+const InlineEdit = ({ value, setValue, titleId }) => {
   const onChange = (event) => setValue(event.target.value);
+  const onKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === "Escape") {
+      event.target.blur();
+    }
+  };
+
+  const onFocusLost = (event) => {
+    socket.timeout(5000).emit('update-snippet-title', titleId, event.target.value, () => {});
+  }
+
   return (
     <input
       type="text"
       aria-label="Field name"
       value={value}
       onChange={onChange}
+      onBlur={onFocusLost}
+      onKeyDown={onKeyDown}
     />
   )
 }
 
 function ProjectDetail({params}) {
-  const { a } = useLoaderData();
-  const [title, setTitleCallback] = useOutletContext();
+  const { id } = useLoaderData();
+  const [title, setTitle] = useOutletContext();
   //var [info, setInfo] = React.useContext(DataContext)
 
   //const info = React.useContext(DataContext)
+  useEffect(
+    () => {
+      socket.on('set-snippet-title', function(msg) {
+        if(msg['id'] == id){
+          setTitle(msg['title']);
+        }
+      });
+    }
+  )
+
 
   return (
     <>
-      <h3><InlineEdit value={title} setValue={setTitleCallback} /></h3>
+      <h3><InlineEdit value={title} setValue={setTitle} titleId={id} /></h3>
 
       <code>
         <table>
