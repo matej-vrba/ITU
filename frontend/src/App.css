@@ -40,6 +40,20 @@ h2{
 
 h3{
 	  color: var(--yellow);
+	  input{
+	  color: var(--yellow);
+	  background: unset;
+	  border: none;
+	  font-weight: 500;
+	  &:active{
+		  box-shadow: none;
+		  outline: none;
+	  }
+	  &:focus{
+		  outline: none;
+
+	  }
+}
 }
 
 
@@ -51,9 +65,9 @@ h3{
 button, .btn{
   border: unset;
   background: unset;
+  overflow: hidden;
 	margin: 3px;
 	margin-top: 0.4em;
-	text-transform: capitalize;
 	padding:  0.25em 0.7em;
 	border-radius: 0;
 	position: relative;
@@ -80,6 +94,7 @@ button, .btn{
 	padding: 1.5em 1em;
 	min-width: 60%;
 	margin: 0 auto;
+	flex: 6;
 }
 
 
@@ -131,6 +146,7 @@ code{
 	width: 100%;
 	.sidebar{
 		background: var(--bg-alt);
+		flex: 1;
 	}
 }
 

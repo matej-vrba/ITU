@@ -29,8 +29,8 @@ function ProjectDetail({params}) {
 
   return (
     <>
-      <h3>A snippet title</h3>
-      <InlineEdit value={info} setValue={infoSet} />
+      <h3><InlineEdit value={info} setValue={infoSet} /></h3>
+
       <code>
         <table>
           <tr><th colspan="2"><div><span>C</span><span>2.12.2023</span></div></th></tr>
@@ -42,10 +42,6 @@ function ProjectDetail({params}) {
           <tr><td>06</td><td><pre>&#125;</pre></td></tr>
         </table>
       </code>
-      <p>
-        { info }
-        { a }
-      </p>
       <p>
         :3
       </p>

@@ -7,11 +7,6 @@ import {DataContext} from './index'
 
 function Projects({params}) {
   const [snippets, setSnippets] = useState([1,2,3,4]);
-  //const [value, setValue] = useState();
-  //const [value, setValue] = snippets[0];
-  //const [snippets, setSnippets] = useState(Array(10).fill('1'));
-
-
 
 
   const addSnippet = () => {
@@ -81,7 +76,7 @@ function Projects({params}) {
         <div className="sidebar">
           <h2>Code2Gether</h2>
           <div id="snippetList" className="list">
-            <button onClick={addSnippet} >new <PlusIcon/></button>
+            <button onClick={addSnippet} >New <PlusIcon/></button>
             {list}
           </div>
         </div>
