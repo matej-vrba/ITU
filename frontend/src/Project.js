@@ -21,7 +21,8 @@ function Projects({params}) {
       });
       socket.on('set-snippet-title', function(msg) {
         let a = snippets;
-        a[msg['id']] = msg;
+        let i = a.findIndex(x => x.id == msg['id']);
+        a[i] = msg;
         setSnippets(a);
       });
     }
