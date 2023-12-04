@@ -48,7 +48,14 @@ h2{
 
 h3{
 	  color: var(--yellow);
+	  display: flex;
+	  align-items: center;
+	  a{
+		  display: inline-block;
+		  margin-left: 1em;
+	  }
 	  input{
+		  width: 100%;
 	  color: var(--yellow);
 	  background: unset;
 	  border: none;

@@ -1,8 +1,9 @@
 from app import create_app, db
 from flask_socketio import SocketIO, emit
-from flask import Blueprint,jsonify
+from flask import Blueprint,jsonify,redirect
+from flask_cors import CORS, cross_origin
 from app.models import Snippet
-from sqlalchemy import select,insert,update
+from sqlalchemy import select,insert,update,delete
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
 from datetime import datetime
@@ -11,6 +12,7 @@ from datetime import datetime
 
 app = create_app()
 socketio = SocketIO(app, cors_allowed_origins="*")
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 if __name__ == '__main__':
     app.run(debug=True)
@@ -23,12 +25,11 @@ def connect_list_snippets():
     all_snippets = select(Snippet)
     b = db.session.scalars(all_snippets)
     c = b.all()
-
     emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))})
 
 
 @socketio.on('add-snippet')
-def connect_list_snippets():
+def add_snippet():
     s = db.session.scalar(insert(Snippet).returning(Snippet),
                            [{'title': "New snippet", "created_at": datetime.today()}])
     db.session.commit()
@@ -46,3 +47,16 @@ def upodate_title(snippet_id, title):
     #db.session.commit()
 
     emit('set-snippet-title', snippetToJsObj(s), broadcast=True)
+
+@app.route("/snippets/<snippet_id>", methods=["DELETE"], strict_slashes=False)
+@cross_origin()
+def deleteSnippet(snippet_id):
+    db.session.connection().execute(delete(Snippet).where(Snippet.id == bindparam("s_id")),
+                                    [{"s_id": snippet_id}])
+    db.session.connection().commit()
+
+    all_snippets = select(Snippet)
+    b = db.session.scalars(all_snippets)
+    c = b.all()
+    socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))})
+    return jsonify(message="Snippet deleted")

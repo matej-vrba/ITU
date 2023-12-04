@@ -1,4 +1,4 @@
-import { useLoaderData, useOutletContext } from "react-router-dom";
+import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
 import DataContext from './Project';
 import React, { useState,useEffect  } from 'react';
 import './Categories.css';
@@ -68,9 +68,25 @@ function ProjectDetail({params}) {
   },[id])
 
 
+const navigate = useNavigate();
+  const del = (e) => {
+    e.preventDefault();
+    fetch('http://localhost:5000/snippets/' + id, { method: 'DELETE' })
+      .then(response => {
+        navigate('/project');
+      }
+      )
+
+    ;
+    return false;
+
+  }
+
+
   return (
     <>
-      <h3><InlineEdit value={title} setValue={setTitle} titleId={id} /></h3>
+
+      <h3><InlineEdit value={title} setValue={setTitle} titleId={id} /><a onClick={del} href="/project">X</a></h3>
 
       <div className="code-wrapper">
         <div className="code-line"><span className="lang">C</span><span className="date">{date}</span></div>
