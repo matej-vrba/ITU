@@ -220,15 +220,18 @@ code{
 
 .icon-svg{
 	path{
-
-    fill:none;
-stroke:#0b090a;
-stroke-width:7;
-stroke-linecap:round;
-stroke-linejoin:round;
-stroke-dasharray:none;
-stroke-opacity:1;
-
+			fill:none;
+			stroke:#0b090a;
+			stroke-width:7;
+			stroke-linecap:round;
+			stroke-linejoin:round;
+			stroke-dasharray:none;
+			stroke-opacity:1;
+		}
 }
-
+.icon-light-svg{
+	@extend .icon-svg;
+	path{
+			stroke: var(--yellow);
+		}
 }

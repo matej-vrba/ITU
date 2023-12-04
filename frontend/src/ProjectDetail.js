@@ -5,6 +5,7 @@ import './Categories.css';
 import {socket} from "./socket"
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import TrashIcon from './icons/Trash';
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -86,7 +87,8 @@ const navigate = useNavigate();
   return (
     <>
 
-      <h3><InlineEdit value={title} setValue={setTitle} titleId={id} /><a onClick={del} href="/project">X</a></h3>
+      <h3><InlineEdit value={title} setValue={setTitle} titleId={id} /><a title="Delete this snippet" onClick={del} href="/project"><TrashIcon/></a></h3>
+
 
       <div className="code-wrapper">
         <div className="code-line"><span className="lang">C</span><span className="date">{date}</span></div>
