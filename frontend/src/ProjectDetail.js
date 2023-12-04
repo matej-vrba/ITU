@@ -62,6 +62,7 @@ function ProjectDetail({params}) {
       .then(response => response.json())
       .then(response => {setDate(response['created_at'])
                          setCode(response['code'])
+                         setTitle(response['title'])
                         })
     .catch(error => console.log(error))
   },[id])
