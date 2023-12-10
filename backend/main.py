@@ -11,7 +11,7 @@ from datetime import datetime
 
 
 app = create_app()
-socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True)
+socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, debug=True)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 if __name__ == '__main__':
@@ -25,7 +25,7 @@ def open_proj(data):
     if(data['projectId'] is None):
         return
     print("join " + data['projectId'])
-    join_room(data['projectId'])
+    join_room("{}".format(data['projectId']))
     c = db.session.scalars(select(Snippet).where(Snippet.project_id.is_(data['projectId']))).all()
     emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))})
 
@@ -38,7 +38,7 @@ def add_snippet(data):
     s = db.session.scalar(insert(Snippet).returning(Snippet),
                            [{'title': "New snippet", "created_at": datetime.today(),'project_id': data['projectId']}])
     db.session.commit()
-    emit('new-snippet', snippetToJsObj(s), broadcast=True)
+    emit('new-snippet', snippetToJsObj(s), to=data['projectId'])
 
 @socketio.on('update-snippet-title')
 def upodate_title(snippet_id, title):
@@ -56,12 +56,12 @@ def upodate_title(snippet_id, title):
 @app.route("/snippets/<snippet_id>", methods=["DELETE"], strict_slashes=False)
 @cross_origin()
 def deleteSnippet(snippet_id):
+
+    room_id = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first().project_id
     db.session.connection().execute(delete(Snippet).where(Snippet.id == bindparam("s_id")),
                                     [{"s_id": snippet_id}])
     db.session.connection().commit()
 
-    all_snippets = select(Snippet)
-    b = db.session.scalars(all_snippets)
-    c = b.all()
-    socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))})
+    c = db.session.scalars(select(Snippet).where(Snippet.project_id.is_(room_id))).all()
+    socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))}, to="{}".format(room_id))
     return jsonify(message="Snippet deleted")

@@ -61,10 +61,11 @@ function ProjectDetail({params}) {
       'methods':'GET'
     })
       .then(response => response.json())
-      .then(response => {setDate(response['created_at'])
-                         setCode(response['code'])
-                         setTitle(response['title'])
-                        })
+      .then(response => {
+        setDate(response['created_at'])
+        setCode(response['code'])
+        setTitle(response['title'])
+      })
     .catch(error => console.log(error))
   },[id])
 
@@ -74,7 +75,7 @@ const navigate = useNavigate();
     e.preventDefault();
     fetch('http://localhost:5000/snippets/' + id, { method: 'DELETE' })
       .then(response => {
-        navigate('/project');
+        navigate('/project/' + 1);//TODO
       }
       )
 

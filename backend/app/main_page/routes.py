@@ -36,6 +36,8 @@ def snippetToJsObj(s):
 @main_page.route("/snippets/<snippet_id>", methods=["GET"], strict_slashes=False)
 def getSnippets(snippet_id):
     s = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first()
+    if(s is None):
+        return ""
     response = jsonify(snippetToJsObj(s))
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
