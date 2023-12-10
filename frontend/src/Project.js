@@ -6,8 +6,16 @@ import React from 'react';
 import {DataContext} from './index'
 import {socket} from "./socket"
 
+export async function loader({ params }) {
+  var id = params.id;
+  socket.timeout(5000).emit('open-project', {projectId: id});
+
+  return { id };
+}
 
 function Projects({params}) {
+
+  let { id } = useParams();
   const [snippets, setSnippets] = useState([]);
 
   useEffect(
@@ -30,7 +38,7 @@ function Projects({params}) {
 
 
   const addSnippet = () => {
-    socket.timeout(5000).emit('add-snippet', () => {});
+    socket.timeout(5000).emit('add-snippet',{projectId: id}, () => {});
   }
 
   let { snippetId } = useParams();
@@ -43,13 +51,14 @@ function Projects({params}) {
     }
   }, [title]);
 
+
   const list = snippets.map(s =>
     {
 
       return(
         <NavLink draggable="false"
               className="btn text-left"
-              to={"/project/" + s['id']}
+              to={"/project/" + id + '/' + s['id']}
               onClick={()=>{
                 setTitle(s['title']);
               }

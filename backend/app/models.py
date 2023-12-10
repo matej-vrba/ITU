@@ -1,7 +1,9 @@
 from app import db
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from sqlalchemy import String, UnicodeText
+from sqlalchemy.orm import relationship
+from sqlalchemy import String, UnicodeText, ForeignKey
+from typing import List
 
 advertisment_category = db.Table('advertisment_category',
                     db.Column('advertisment_id', db.Integer, db.ForeignKey('advertisment.id')),
@@ -23,6 +25,14 @@ class Snippet(db.Model):
     title: Mapped[str] = mapped_column(String(150))
     created_at = db.Column(db.Date())
     code = db.Column(db.UnicodeText())
+    project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"))
+
+class Project(db.Model):
+    __tablename__ = "projects"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    created_at = db.Column(db.Date())
+    children: Mapped[List["Snippet"]] = relationship()
 
 
 class Category(db.Model):

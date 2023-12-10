@@ -1,5 +1,5 @@
 from app import create_app, db
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask import Blueprint,jsonify,redirect
 from flask_cors import CORS, cross_origin
 from app.models import Snippet
@@ -11,7 +11,7 @@ from datetime import datetime
 
 
 app = create_app()
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 if __name__ == '__main__':
@@ -20,18 +20,23 @@ if __name__ == '__main__':
 def snippetToJsObj(s):
     return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y')}
 
-@socketio.on('connect')
-def connect_list_snippets():
-    all_snippets = select(Snippet)
-    b = db.session.scalars(all_snippets)
-    c = b.all()
+@socketio.on('open-project')
+def open_proj(data):
+    if(data['projectId'] is None):
+        return
+    print("join " + data['projectId'])
+    join_room(data['projectId'])
+    c = db.session.scalars(select(Snippet).where(Snippet.project_id.is_(data['projectId']))).all()
     emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))})
 
 
 @socketio.on('add-snippet')
-def add_snippet():
+def add_snippet(data):
+    if(data['projectId'] is None):
+        return
+
     s = db.session.scalar(insert(Snippet).returning(Snippet),
-                           [{'title': "New snippet", "created_at": datetime.today()}])
+                           [{'title': "New snippet", "created_at": datetime.today(),'project_id': data['projectId']}])
     db.session.commit()
     emit('new-snippet', snippetToJsObj(s), broadcast=True)
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { useState,useEffect  } from 'react'
 import ReactDOM from 'react-dom';
 import App from './App';
-import Project from './Project';
+import Project, {loader as projectLoader} from './Project';
 import ProjectDetail, {loader as projectDetailLoader } from './ProjectDetail';
 import {
   createBrowserRouter,
@@ -17,11 +17,12 @@ const router = createBrowserRouter([
     element: <App/>,
     children:[
       {
-        path: "/project/",
+        path: "/project/:id/",
         element: <Project/>,
+        loader: projectLoader,
         children:[
           {
-            path: "/project/:snippetId",
+            path: "/project/:id/:snippetId",
             element: <ProjectDetail/>,
             loader: projectDetailLoader,
           }
