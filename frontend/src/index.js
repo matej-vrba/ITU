@@ -8,6 +8,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { CookiesProvider } from 'react-cookie';
+import CookieAppWrapper from './CookieAppWrapper';
 
 export var DataContext = React.createContext([null, ()=>{}]);
 
@@ -41,9 +43,13 @@ const router = createBrowserRouter([
 
 ReactDOM.render(
   <React.StrictMode>
-    <DataContext.Provider value={[null, null]}>
-      <RouterProvider router={router} />
-    </DataContext.Provider>
+    <CookiesProvider>
+      <DataContext.Provider value={[null, null]}>
+        <CookieAppWrapper>
+          <RouterProvider router={router} />
+        </CookieAppWrapper>
+      </DataContext.Provider>
+    </CookiesProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

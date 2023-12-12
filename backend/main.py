@@ -7,8 +7,7 @@ from sqlalchemy import select,insert,update,delete
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
 from datetime import datetime
-
-
+from app.models import User
 
 app = create_app()
 socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, debug=True)
@@ -65,3 +64,11 @@ def deleteSnippet(snippet_id):
     c = db.session.scalars(select(Snippet).where(Snippet.project_id.is_(room_id))).all()
     socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))}, to="{}".format(room_id))
     return jsonify(message="Snippet deleted")
+
+@app.route("/create-user", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def create_user():
+    user = User()
+    db.session.add(user)
+    db.session.commit()
+    return {"user_id":user.id}

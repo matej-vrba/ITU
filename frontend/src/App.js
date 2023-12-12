@@ -9,6 +9,7 @@ import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState';
 
 function App({children}) {
+  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(
     () => {
