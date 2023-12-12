@@ -83,7 +83,6 @@ function Projects({params}) {
 
   const list = snippets.map(s =>
     {
-
       return(
         <NavLink draggable="false"
               className="btn text-left"

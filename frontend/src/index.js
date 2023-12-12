@@ -24,6 +24,7 @@ const router = createBrowserRouter([
     // Project a v parametru id bude "1234abcd"
    path: "/project/:id/",
    element: <Project/>,
+    // loader je něco jako constructor
    loader: projectLoader,
    children:[
      {
