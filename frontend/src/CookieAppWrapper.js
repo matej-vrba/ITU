@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useContext,createContext } from 'react';
 import { useCookies } from 'react-cookie';
-import {socket} from "./socket"
+import { UserContext } from '.';
 
 const AppWrapper = ({ children }) => {
   const [cookies, setCookie] = useCookies(['user_id']);
-
+  let userId = cookies.user_id;
   useEffect(() => {
     // Check if the 'user_id' cookie exists
-    const userId = cookies.user_id;
-
     // If the 'user_id' cookie doesn't exist, set a new one
     if (!userId) {
       console.log('Cookie not found! Setting a new one...');
@@ -16,21 +14,23 @@ const AppWrapper = ({ children }) => {
       .then(response => response.json())
       .then(responseData => {
         // Access the user_id from the resolved Promise
-        const userId = responseData.user_id;
+        userId = responseData.user_id;
         setCookie('user_id', userId, { path: '/' });
-    
+        
         console.log("Set user: ", userId);
       })
   
     } else {
-      console.log('Cookie found!');
-      console.log('User: ',cookies.user_id);
+      console.log('Cookie found!,User: ',cookies.user_id);
     }
+    //here i want to set to the Data Context user_id=cookies.user_id
   }, [cookies.user_id, setCookie]);
 
   return (
     <div className="AppWrapper">
-      {children}
+      <UserContext.Provider value={cookies.user_id}>
+        {children}
+      </UserContext.Provider>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { useState,useEffect  } from 'react'
 import { Outlet, NavLink, Link, useParams } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
-import {DataContext} from './index'
 import {socket} from "./socket"
 import { ConnectionState } from './components/ConnectionState';
 

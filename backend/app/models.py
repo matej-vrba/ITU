@@ -10,6 +10,7 @@ from typing import List
 class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
+    created_projects: Mapped[List["Project"]] = relationship()
 
 class Snippet(db.Model):
     __tablename__ = "snippets"
@@ -26,5 +27,7 @@ class Project(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at = db.Column(db.Date())
     children: Mapped[List["Snippet"]] = relationship()
+    creator: Mapped[int] = mapped_column(ForeignKey("user.id"))
+
 
 

@@ -11,7 +11,7 @@ import {
 import { CookiesProvider } from 'react-cookie';
 import CookieAppWrapper from './CookieAppWrapper';
 
-export var DataContext = React.createContext([null, ()=>{}]);
+export var UserContext = React.createContext([null, ()=>{}]);
 
 // Informace o tom, která route odpovídá které komponentě
 const router = createBrowserRouter([
@@ -44,11 +44,11 @@ const router = createBrowserRouter([
 ReactDOM.render(
   <React.StrictMode>
     <CookiesProvider>
-      <DataContext.Provider value={[null, null]}>
+      <UserContext.Provider value={[null, null]}>
         <CookieAppWrapper>
           <RouterProvider router={router} />
         </CookieAppWrapper>
-      </DataContext.Provider>
+      </UserContext.Provider>
     </CookiesProvider>
   </React.StrictMode>,
   document.getElementById('root')

@@ -7,7 +7,7 @@ from sqlalchemy import select,insert,update,delete
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
 from datetime import datetime
-from app.models import User
+from app.models import User,Project
 
 app = create_app()
 socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, debug=True)
@@ -71,4 +71,14 @@ def create_user():
     user = User()
     db.session.add(user)
     db.session.commit()
+    #after commiting user.id is set to user
     return {"user_id":user.id}
+
+@app.route("/project/create/<user_id>", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def create_project(user_id):
+    projet = Project(created_at=datetime.today(),creator=user_id)
+    db.session.add(projet)
+    db.session.commit()
+    #after commiting project.id is set to project
+    return {"project_id":projet.id}

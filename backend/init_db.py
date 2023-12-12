@@ -8,7 +8,11 @@ with app.app_context():
     # Create the tables
     db.create_all()
 
-    db.session.add(Project(created_at=datetime.today()))
+    user_1 = User()
+    db.session.add(user_1)
+    db.session.commit()
+
+    db.session.add(Project(created_at=datetime.today(),creator=user_1.id))
 
     db.session.add(Snippet(title="A snippet", created_at=datetime.today(), code="""//sample code
 #include <stdio.h>
