@@ -1,5 +1,3 @@
-
-
 export function ConnectionState({isConnected}){
   if(isConnected == true){
     return(<></>)

@@ -9,7 +9,6 @@ import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState';
 
 function App({children}) {
-  const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(
     () => {
@@ -21,9 +20,7 @@ function App({children}) {
       }
       socket.on('connect', onConn);
       socket.on('disconnect', onDis);
-
     }
-
   )
 
   return (
@@ -31,16 +28,6 @@ function App({children}) {
       <ConnectionState isConnected={ isConnected } />
       <Outlet />
     </div>
-  );
-
-  return (
-    <>
-    <Header/>
-    <div className="App">
-        <Outlet />
-    </div>
-    <Footer/>
-    </>
   );
 }
 
