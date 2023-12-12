@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { redirect, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import { UserContext } from '.'; // Adjust the path as needed
 
 const CreateButtom = () => {
@@ -23,7 +23,7 @@ const CreateButtom = () => {
 
   return (
     <div>
-      <button onClick={handleButtonClick}>Click Me</button>
+      <button onClick={handleButtonClick}>Create Project</button>
     </div>
   );
 };

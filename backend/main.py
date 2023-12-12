@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
 from datetime import datetime
 from app.models import User,Project
+import secrets
+import string
 
 app = create_app()
 socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, debug=True)
@@ -74,11 +76,43 @@ def create_user():
     #after commiting user.id is set to user
     return {"user_id":user.id}
 
+
+
+def generate_connection_string(length=16):
+    characters = string.ascii_letters + string.digits
+    connection_string = ''.join(secrets.choice(characters) for _ in range(length))
+    return connection_string
+
 @app.route("/project/create/<user_id>", methods=["POST"], strict_slashes=False)
 @cross_origin()
 def create_project(user_id):
-    projet = Project(created_at=datetime.today(),creator=user_id)
+    random_string = generate_connection_string()
+    print(random_string)
+    projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
     db.session.add(projet)
     db.session.commit()
     #after commiting project.id is set to project
     return {"project_id":projet.id}
+
+@app.route("/project/connect/<user_id>/<connection_string>", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def project_connect(user_id,connection_string):
+    #after commiting project.id is set to project
+    project = Project.query.filter_by(connection_string=connection_string).first()
+    if(project == None):
+        return jsonify(project_id=None)
+
+    users = User.query.all()
+    for u in users:
+        print(u.id)
+
+    user = User.query.filter_by(id=user_id).first()
+    #pokud user nepouziva projekt stane se userem projektu, a nebude tam pridavat i creatora
+    if(not user in project.users and user.id != project.creator):
+        project.users.append(user)
+        db.session.add(project)
+        db.session.commit()
+        
+    return jsonify(project_id=project.id)
+
+

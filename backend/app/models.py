@@ -4,8 +4,18 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from sqlalchemy import String, UnicodeText, ForeignKey
 from typing import List
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy import Table
+from sqlalchemy import Column
 
 
+
+project_user = Table(
+    "project_user",
+    db.Model.metadata,
+    Column("project_id", ForeignKey("projects.id")),
+    Column("user_id", ForeignKey("user.id")),
+)
 
 class User(db.Model):
     __tablename__ = "user"
@@ -26,8 +36,9 @@ class Project(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at = db.Column(db.Date())
+    connection_string: Mapped[str] = mapped_column(String(150),nullable=True,unique=True)
     children: Mapped[List["Snippet"]] = relationship()
     creator: Mapped[int] = mapped_column(ForeignKey("user.id"))
-
+    users: Mapped[List[User]] = relationship(secondary=project_user)
 
 
