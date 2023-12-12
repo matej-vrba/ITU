@@ -40,9 +40,8 @@ const InlineEdit = ({ value, setValue, titleId }) => {
 
 function ProjectDetail({params}) {
   const { id } = useLoaderData();
-  const [title, setTitle] = useOutletContext();
-  //var [info, setInfo] = React.useContext(DataContext)
-  //const info = React.useContext(DataContext)
+  const [title, setTitle] = useState("An unknown snippet");
+
   useEffect(
     () => {
       socket.on('set-snippet-title', function(msg) {
@@ -55,6 +54,7 @@ function ProjectDetail({params}) {
 
   const [date, setDate] = useState([]);
   const [code, setCode] = useState([]);
+
 
   useEffect(()=>{
     fetch('http://localhost:5000/snippets/' + id,{
@@ -77,11 +77,8 @@ const navigate = useNavigate();
       .then(response => {
         navigate('/project/' + 1);//TODO
       }
-      )
-
-    ;
+      ) ;
     return false;
-
   }
 
 
