@@ -2,7 +2,8 @@ import React, { useState, useEffect,useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '.';
 import {  useNavigate } from "react-router-dom";
-
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 const ProjectList = () => {
     const user_id = useContext(UserContext);
@@ -21,9 +22,21 @@ const ProjectList = () => {
             <div className="project-icons">
                 {projects.map(project => (
                 <Link to={`/project/${project.id}`} key={project.id} className="project-icon">
-                    {/* Customize the way you want to display the project information */}
-                    <div className="project-name">{project.name}</div>
-                    <div className="project-description">{project.role}</div>
+                    <div className="project-overlay">
+                        <div className="project-name">{project.name}</div>
+                        <div className='project-code'>
+                            <SyntaxHighlighter
+                                wrapLines="false"
+                                language="javascript"
+                                style={monokai}
+                                showLineNumbers="true"
+                                >
+                                {project.code+'\n'.repeat(50)}
+
+                            </SyntaxHighlighter>
+                        </div>
+                    </div>
+                    {/* <div className="project-description">{project.role}</div> */}
                 </Link>
                 ))}
             </div>

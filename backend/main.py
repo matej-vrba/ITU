@@ -132,7 +132,28 @@ def generate_connection_string(length=16):
 def create_project(user_id):
     random_string = generate_connection_string()
     print(random_string)
+
+    #original correct
+    # projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
+
+    #just for testing
+    ## START
     projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
+    db.session.add(projet)
+    db.session.commit()
+
+    snip = Snippet(title="Test snip", created_at=datetime.today(), code="""//sample code
+        #include <stdio.h>
+
+        int main(int argc, char *argv[]) {
+            printf("Hello world\\n")
+            return 0;
+        }""",project_id = projet.id)
+    db.session.add(snip)
+    db.session.commit()
+    projet.children.append(snip)
+    ## END OF TEST
+    
     db.session.add(projet)
     db.session.commit()
     #after commiting project.id is set to project
@@ -170,10 +191,19 @@ def get_projects(user_id):
     for project in projects:
         if user in project.users:
             collab_projects.append(project)
-    
     projects_json = []
     #TODO project name
-    [projects_json.append({"id" : project.id,"name" : "todo","created" : project.created_at,"role" : "creator"}) for project in owned_projects]
-    [projects_json.append({"id" : project.id,"name" : "todo","created" : project.created_at,"role" : "collaborator"}) for project in collab_projects]
+    [projects_json.append({"id" : project.id,
+                           "name" : "todo",
+                           "created" : project.created_at,
+                           "role" : "creator",
+                           "code":project.children[0].code if project.children != [] else "empty",}
+                           ) for project in owned_projects]
+    [projects_json.append({"id" : project.id,
+                        "name" : "todo",
+                        "created" : project.created_at,
+                        "role" : "collab",
+                        "code":project.children[0].code if project.children != [] else "empty",}
+                        ) for project in collab_projects]
 
     return jsonify(projects_json)
