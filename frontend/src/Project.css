@@ -1,9 +1,0 @@
-@import "_colors.css";
-
-.sidebar{
-	background: lightgray;
-	display: inline-block;
-	width: fit-content;
-	min-width: 15em;
-	padding: 1em 0.6em;
-}

@@ -1,5 +1,5 @@
-import './Project.css';
-import { useState,useEffect  } from 'react'
+import './Project.scss';
+import { useState,useEffect } from 'react'
 import { Outlet, NavLink, Link, useParams, useNavigate } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
