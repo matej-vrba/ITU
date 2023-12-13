@@ -6,6 +6,7 @@ import {socket} from "./socket"
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import TrashIcon from './icons/Trash';
+import ChatComponent from "./ChatComponent";
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -94,25 +95,8 @@ const navigate = useNavigate();
           {code}
         </SyntaxHighlighter>
       </div>
-      <div className="comments">
-
-        <div className="hide-overflow">
-          <div className="comment cut-corner">
-            <h4>Někdo</h4>
-            <p>
-              Může mi někdo vysvětlit 3. řádek?
-            </p>
-          </div>
-        </div>
-        <div className="hide-overflow">
-          <div className="comment cut-corner">
-            <h4>Někdo jinej</h4>
-            <p>
-              Nepotřebuješ chápat
-            </p>
-          </div>
-        </div>
-      </div>
+      <ChatComponent 
+      id={id}/>
     </>
   )
 }

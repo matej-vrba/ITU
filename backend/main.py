@@ -2,7 +2,7 @@ from app import create_app, db
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask import Blueprint,jsonify,redirect
 from flask_cors import CORS, cross_origin
-from app.models import Snippet
+from app.models import Snippet,Message
 from sqlalchemy import select,insert,update,delete
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
@@ -65,3 +65,26 @@ def deleteSnippet(snippet_id):
     c = db.session.scalars(select(Snippet).where(Snippet.project_id.is_(room_id))).all()
     socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))}, to="{}".format(room_id))
     return jsonify(message="Snippet deleted")
+
+
+@socketio.on('get-all-messages')
+def handle_get_all_messages(snippet_id):
+    # Retrieve all messages for the given snippet_id
+    messages = Message.query.filter_by(snippet_id=snippet_id).all()
+    messages_data = [{'name': message.name, 'text': message.message} for message in messages]
+    print(messages_data)
+    emit('messages', messages_data)
+
+@socketio.on('send-message')
+def handle_send_message(data):
+    name = data['name']
+    text = data['text']
+    snippet_id = data['snippetId']
+
+    # Save the message to the database
+    new_message = Message(name=name, message=text, snippet_id=snippet_id)
+    db.session.add(new_message)
+    db.session.commit()
+
+    # Fetch and broadcast all messages after inserting a new message
+    handle_get_all_messages(snippet_id)

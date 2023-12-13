@@ -41,7 +41,14 @@ class Category(db.Model):
     name = db.Column(db.String(256))
     advertisments = db.relationship('Advertisment',secondary=advertisment_category,backref='categories')
 
-
+class Message(db.Model):
+    __tablename__ = "message"
+    id = db.Column(db.Integer, primary_key=True)
+    name: Mapped[str] = mapped_column(String(256))
+    snippet_id: Mapped[int] = mapped_column(ForeignKey("snippets.id"))
+    message: Mapped[str] = mapped_column(String(256))
+    
+ 
 class Advertisment(db.Model):
 
     def serialize(self):

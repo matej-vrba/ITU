@@ -10,5 +10,8 @@
     "foreman": "^3.0.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "joi": "^17.11.0"
+  }
 }

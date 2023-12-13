@@ -1,5 +1,5 @@
 from app import db, create_app
-from app.models import User,Advertisment,Category,Snippet,Project
+from app.models import User,Advertisment,Category,Snippet,Project,Message
 from datetime import datetime
 
 app = create_app()
@@ -36,6 +36,10 @@ fn main() {
 
                            project_id = 1
                            ))
+    
+    db.session.add(Message(name="Jiří", snippet_id=1, message="Zpráva"));
+    
+    
 
     #user0 = User(username="xname00", password="heslo00", email="xlog00@email.cz,")
     #user1 = User(username="xname01", password="heslo01", email="xlog01@email.cz,")
