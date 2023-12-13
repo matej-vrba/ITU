@@ -16,7 +16,7 @@ const CreateButtom = () => {
     const projectId = responseData.project_id;
       
       console.log("Created project: ", projectId);
-    navigate("project/"+projectId);
+      navigate("project/"+projectId);
 
     })
   };

@@ -32,14 +32,16 @@ def open_proj(data):
 
 
 @socketio.on('add-snippet')
-def add_snippet(data):
-    if(data['projectId'] is None):
+@app.route("/project/<projectId>/snippet/new", methods=["POST"], strict_slashes=False)
+def add_snippet(projectId):
+    if(projectId is None):
         return
 
     s = db.session.scalar(insert(Snippet).returning(Snippet),
-                           [{'title': "New snippet", "created_at": datetime.today(),'project_id': data['projectId']}])
+                           [{'title': "New snippet", "created_at": datetime.today(),'project_id': projectId}])
     db.session.commit()
-    emit('new-snippet', snippetToJsObj(s), to=data['projectId'])
+    socketio.emit('new-snippet', snippetToJsObj(s), to=projectId)
+    return snippetToJsObj(s)
 
 @socketio.on('update-snippet-title')
 def upodate_title(snippet_id, title):

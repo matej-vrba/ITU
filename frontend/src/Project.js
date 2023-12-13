@@ -1,6 +1,6 @@
 import './Project.css';
 import { useState,useEffect  } from 'react'
-import { Outlet, NavLink, Link, useParams } from "react-router-dom";
+import { Outlet, NavLink, Link, useParams, useNavigate } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
 import {socket} from "./socket"
@@ -63,8 +63,15 @@ function Projects({params}) {
 
   // clicking new snippet only sends event to backend with projectId it
   // was requested from, if backend approves, it then sends new-snippet
+  const navigate = useNavigate();
   const addSnippet = () => {
-    socket.timeout(5000).emit('add-snippet',{projectId: id}, () => {});
+    fetch('http://localhost:5000/project/' + id + '/snippet/new', { method: 'POST' })
+    .then(response => response.json())
+    .then(response => {
+        setSnippets([...snippets, response])
+      navigate("/project/"+id + '/' + response['id']);
+
+    })
   }
 
   // loading snippetId, which is specified in url (/project/id/snippetId)
