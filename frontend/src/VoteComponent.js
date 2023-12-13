@@ -20,8 +20,8 @@ const VoteComponent = ({ id }) => {
 	  }, [id, socket]);
 	  
 	  const fetchVotes = () => {
-		data = ['id' = id, 'userId' = userId];
-		socket.emit('get-all-votes', data);
+		
+		socket.emit('get-all-votes', id);
 	  };
 
 	const [newVote, setNewVote] = useState({ duration: '', message: '' });

@@ -105,7 +105,7 @@ def handle_new_vote(data):
        
 @socketio.on('get-all-votes')
 def handle_get_all_votes(data):
-    votes = Vote.query.filter_by(snippet_id=data['id']).all()
+    votes = Vote.query.filter_by(snippet_id=data).all()
     #user = User.query.filer_by(id=data['userId']).all()
     votes_data = [{'vote_title': vote.vote_title,'snippet_id': vote.snippet_id} for vote in votes]
     print(votes_data)
