@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import {  useNavigate } from "react-router-dom";
 import { UserContext } from '.'; // Adjust the path as needed
+import './MainPage.scss';
 
 const CreateButtom = () => {
   const user_id = useContext(UserContext);
@@ -22,8 +23,9 @@ const CreateButtom = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleButtonClick}>Create Project</button>
+    <div className="create-button">
+      <button onClick={handleButtonClick}></button>
+      <p>New Project</p>
     </div>
   );
 };

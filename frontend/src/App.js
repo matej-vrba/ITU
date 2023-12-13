@@ -1,5 +1,6 @@
 import { useState,useEffect, useContext } from 'react'
 import './App.scss';
+import './MainPage.scss';
 import Header from './Header';
 import Categories from './Categories';
 import ProductList from './ProductList';
@@ -29,13 +30,16 @@ function App({children}) {
 
   return (
     <div className="App">
-      <ConnectionState isConnected={ isConnected } />
-      {/* list your sessions */}
-        <ProjectList/>
-      {/* create button */}
-        <CreateButtom/>
-      {/* join via code */}
-      <ConnectionInput/>
+      <div className="main-container">
+        <h1 className="main-title">CODE2GETHER</h1>
+        <ConnectionState isConnected={ isConnected } />
+        {/* list your sessions */}
+          <ProjectList/>
+        {/* create button */}
+          <CreateButtom/>
+        {/* join via code */}
+        <ConnectionInput/>
+      </div>
       <Outlet />
     </div>
   );

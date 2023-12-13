@@ -1,0 +1,162 @@
+
+  .main-title{
+    color: var(--cyan);
+    font-size: 5em;
+    margin-top: 60px;
+    margin-bottom: 30px;
+  }
+
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-content: flex-start;
+    height: 100vh; /* Adjust as needed to make the container take the full height of the viewport */
+    width: 90%;
+    max-width: 1200px; /* You can adjust the max-width based on your design */
+    margin: 0 auto; /* Center the container horizontally */
+    box-sizing: border-box; /* Include padding and border in the total width */
+  }
+
+
+//###############################################
+// Project list
+
+  .project-list {
+    margin-top: 20px; /* Adjust the top margin based on your design preference */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .project-icons {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 300px; // Set the max height before scrolling starts
+    overflow-y: auto; // Enable vertical scrolling when necessary
+  }
+  
+  .project-icon {
+    text-decoration: none;
+    color: #333; /* Set the color for project icons */
+    border: 1px solid #ccc; /* Add a border to separate project icons */
+    padding: 10px;
+    margin: 10px;
+    width: 200px; /* Adjust the width based on your design preference */
+  }
+  
+  .project-name {
+    font-weight: bold;
+  }
+  
+  .project-description {
+    margin-top: 5px;
+    color: #666; /* Set the color for project descriptions */
+  }
+
+h3{
+	  color: var(--yellow);
+	  margin-bottom: 40px;
+}
+
+// ############################################33
+// create button 
+
+.create-button {
+  margin-top: 20px; /* Adjust the top margin based on your design preference */
+  text-align: center;
+}
+
+.create-button button {
+  font-size: 2em; /* Increase the font size for a bigger button */
+  width: 100px; /* Set a fixed width for a square button */
+  height: 100px; /* Set a fixed height for a square button */
+  line-height: 100px; /* Center the plus sign vertically */
+  background-color: var(--pink); /* Set the background color for the button */
+  color: #bc1d60; /* Set the text color for the button */
+  border: none;
+  border-radius: 10px; /* Adjust the border-radius for oblique corners */
+  cursor: pointer;
+}
+
+.create-button button:hover {
+  background-color: #bc1d60; /* Set the background color on hover */
+  color: #7e103e; /* Set the text color for the button */
+}
+
+/* Plus sign styling */
+.create-button button::after {
+  content: '+';
+  font-size: 2.5em; /* Set the font size proportional to the button size */
+  position: absolute; /* Use absolute positioning to place the plus sign */
+  top: 50%; /* Position the plus sign vertically at 50% of the button */
+  left: 50%; /* Position the plus sign horizontally at 50% of the button */
+  transform: translate(-50%, -50%); /* Center the plus sign both horizontally and vertically */
+}
+
+.create-button p {
+  margin-top: 10px; /* Adjust the top margin for the text */
+  font-size: 1.2em; /* Adjust the font size for the text */
+  color: var(--yellow); /* Set the text color for the text */
+}
+
+
+// ############################################33
+// conenction input 
+
+.connection-input {
+  /* Add any common styles for the input container here */
+  text-align: center; /* Center the text within the container */
+  margin-top: 20px; /* Adjust the top margin based on your design preference */
+  display: flex;
+}
+
+
+.connection-input label {
+  /* Add any common styles for the label here */
+  margin-bottom: 10px; /* Adjust the bottom margin for the label */
+  margin-top: 10px; /* Adjust the bottom margin for the label */
+  color: var(--cyan);
+  font-size: 1.2em; /* Adjust the font size for the label */
+}
+
+.connection-input input {
+  /* Add any common styles for the input field here */
+  width: 300px; /* Set the width of the input field */
+  padding: 10px; /* Adjust the padding for the input field */
+  font-size: 1em; /* Adjust the font size for the input field */
+  border: 2px solid var(--pink); /* Set the border for the input field */
+  // border-radius: 5px; /* Adjust the border-radius for the input field */
+  width: 75%;
+  color: var(--yellow);
+  background-color: var(--black);
+  height: 50px;
+  vertical-align: middle;
+
+}
+
+.connection-input button {
+  /* Add any common styles for the submit button here */
+  width: 15%; /* Set the width of the button */
+  padding: 10px; /* Adjust the padding for the button */
+  font-size: 3.2em; /* Adjust the font size for the button */
+  background-color: var(--pink); /* Set the background color for the button */
+  color: #7e103e; /* Set the text color for the button */
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  height: 50px;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 20px;
+}
+
+
+.connection-input button:hover {
+  background-color: #bc1d60; /* Set the background color on hover */
+  color: #7e103e; /* Set the text color for the button */
+}
+

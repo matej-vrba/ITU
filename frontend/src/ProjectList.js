@@ -17,18 +17,19 @@ const ProjectList = () => {
     }, []);
 
     return (
-        <div>
-        <h2>Project List</h2>
-        <div className="project-icons">
-            {projects.map(project => (
-            <Link to={`/project/${project.id}`} key={project.id} className="project-icon">
-                {/* Customize the way you want to display the project information */}
-                <div className="project-name">{project.name}</div>
-                <div className="project-description">{project.role}</div>
-            </Link>
-            ))}
+        <div className="project-list">
+            <div className="project-icons">
+                {projects.map(project => (
+                <Link to={`/project/${project.id}`} key={project.id} className="project-icon">
+                    {/* Customize the way you want to display the project information */}
+                    <div className="project-name">{project.name}</div>
+                    <div className="project-description">{project.role}</div>
+                </Link>
+                ))}
+            </div>
+            {projects.length > 0 && <h3>Your Projects</h3>}
         </div>
-        </div>
+
     );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState,useContext } from 'react';
 import { UserContext } from '.';
 import { useNavigate } from "react-router-dom";
+import './MainPage.scss';
 
 
 const ConnectionInput = () => {
@@ -35,24 +36,21 @@ const ConnectionInput = () => {
         console.log("Wrong connect string ");
         return <p>Wrong connect string</p>;
       }
-    // const projectId = responseData.project_id;
-      
-      // console.log("Created project: ", projectId);
-
     })
   };
 
   return (
-    <div>
+    <div className='connection-input'>
       <form onSubmit={handleSubmit}>
         {/* Input field */}
-        <label>
           <input type="text" value={inputValue} onChange={handleInputChange} placeholder='Connection String:'/>
+
+        {/* Submit button */}
+        <button type="submit">&#x21D2;</button>
+        <label>
           Connect to project
         </label>
 
-        {/* Submit button */}
-        <button type="submit">Submit</button>
       </form>
     </div>
   );
