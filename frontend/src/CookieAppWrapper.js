@@ -27,11 +27,9 @@ const AppWrapper = ({ children }) => {
   }, [cookies.user_id, setCookie]);
 
   return (
-    <div className="AppWrapper">
       <UserContext.Provider value={cookies.user_id}>
         {children}
       </UserContext.Provider>
-    </div>
   );
 };
 
