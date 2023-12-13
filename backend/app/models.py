@@ -48,7 +48,18 @@ class Message(db.Model):
     snippet_id: Mapped[int] = mapped_column(ForeignKey("snippets.id"))
     message: Mapped[str] = mapped_column(String(256))
     
- 
+class Vote(db.Model):
+    __tablename__ = "vote"
+    id = db.Column(db.Integer, primary_key=True)
+    vote_title: Mapped[str] = mapped_column(String(256))
+    #created_by: Mapped[int] = mapped_column(ForeignKey("project_user.id"))
+    snippet_id: Mapped[int] = mapped_column(ForeignKey("snippets.id"))
+    active = db.Column(db.Boolean, default=True, nullable=False)
+    
+class UserVotes(db.Model):
+    __tablename__ = "vote"
+    
+    
 class Advertisment(db.Model):
 
     def serialize(self):

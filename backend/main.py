@@ -2,7 +2,7 @@ from app import create_app, db
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask import Blueprint,jsonify,redirect
 from flask_cors import CORS, cross_origin
-from app.models import Snippet,Message
+from app.models import Snippet,Message,Vote
 from sqlalchemy import select,insert,update,delete
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
@@ -74,7 +74,7 @@ def deleteSnippet(snippet_id):
 def handle_get_all_messages(snippet_id):
     # Retrieve all messages for the given snippet_id
     messages = Message.query.filter_by(snippet_id=snippet_id).all()
-    messages_data = [{'name': message.name, 'text': message.message} for message in messages]
+    messages_data = [{'name': message.name, 'text': message.message, 'snippet_id': message.snippet_id} for message in messages]
     print(messages_data)
     emit('messages', messages_data)
 
@@ -91,6 +91,26 @@ def handle_send_message(data):
 
     # Fetch and broadcast all messages after inserting a new message
     handle_get_all_messages(snippet_id)
+ 
+@socketio.on('start-vote')
+def handle_new_vote(data):
+    vote_title = data['vote_title']
+    snippet_id = data['snippetId']
+    
+    new_vote = Vote(vote_title=vote_title, snippet_id=snippet_id, active=True)
+    db.session.add(new_vote)
+    db.session.commit()
+    
+    handle_get_all_votes(snippet_id)
+       
+@socketio.on('get-all-votes')
+def handle_get_all_votes(data):
+    votes = Vote.query.filter_by(snippet_id=data['id']).all()
+    #user = User.query.filer_by(id=data['userId']).all()
+    votes_data = [{'vote_title': vote.vote_title,'snippet_id': vote.snippet_id} for vote in votes]
+    print(votes_data)
+    emit('votes', votes_data)
+    
 @app.route("/create-user", methods=["POST"], strict_slashes=False)
 @cross_origin()
 def create_user():

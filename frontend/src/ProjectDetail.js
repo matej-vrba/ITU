@@ -6,6 +6,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import TrashIcon from './icons/Trash';
 import ChatComponent from "./ChatComponent";
+import VoteComponent from "./VoteComponent";
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -95,6 +96,8 @@ const navigate = useNavigate();
         </SyntaxHighlighter>
       </div>
       <ChatComponent 
+      id={id}/>
+      <VoteComponent
       id={id}/>
     </>
   )
