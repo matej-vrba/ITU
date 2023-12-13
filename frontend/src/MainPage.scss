@@ -6,6 +6,9 @@
     margin-bottom: 30px;
   }
 
+  .highlighted-number {
+    color: var(--pink) /* your desired color for the number 2 */;
+  }
 
 .main-container {
     display: flex;
@@ -30,6 +33,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    min-width: 1200px;
   }
   
   .project-icons {
@@ -40,6 +44,8 @@
     scrollbar-width: thin; /* For Firefox */
     scrollbar-color: var(--pink) var(--black); /* For Firefox */
     width: 95%;
+
+    justify-content: center;
   }
   
   .project-icon {
@@ -88,8 +94,8 @@
     text-decoration: none;
     color: #333; /* Set the color for project icons */
     border: 1px solid #ccc; /* Add a border to separate project icons */
-    width: 200px; /* Adjust the width based on your design preference */
-    height: 300px; 
+    width: 100%; /* Adjust the width based on your design preference */
+    height: 100%; 
   }
 
   .project-code {
@@ -101,6 +107,21 @@
   .project-code :hover {
     background: None;
   }
+
+  .trash-icon {
+    position: absolute;
+    top: 5%;
+    left: 90%;
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+  }
+  
+
+
+  .project-icon:hover .trash-icon {
+    visibility: visible;
+  }
+
 
 h3{
 	  color: var(--yellow);

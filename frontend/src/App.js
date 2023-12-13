@@ -31,7 +31,10 @@ function App({children}) {
   return (
     <div className="App">
       <div className="main-container">
-        <h1 className="main-title">CODE2GETHER</h1>
+        {/* <h1 className="main-title">Code2Gether</h1> */}
+        <h1 className="main-title">
+          Code<span className="highlighted-number">2</span>Gether
+        </h1>
         <ConnectionState isConnected={ isConnected } />
         {/* list your sessions */}
           <ProjectList/>

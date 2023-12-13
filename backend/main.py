@@ -207,3 +207,12 @@ def get_projects(user_id):
                         ) for project in collab_projects]
 
     return jsonify(projects_json)
+
+
+@app.route("/project/<project_id>", methods=["DELETE"], strict_slashes=False)
+@cross_origin()
+def delete_projects(project_id):
+    project = Project.query.filter_by(id=project_id).first()
+    db.session.delete(project)
+    db.session.commit()
+    return jsonify(message="Project deleted")
