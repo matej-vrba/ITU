@@ -8,8 +8,10 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { CookiesProvider } from 'react-cookie';
+import CookieAppWrapper from './CookieAppWrapper';
 
-export var DataContext = React.createContext([null, ()=>{}]);
+export var UserContext = React.createContext([null, ()=>{}]);
 
 // Informace o tom, která route odpovídá které komponentě
 const router = createBrowserRouter([
@@ -41,9 +43,13 @@ const router = createBrowserRouter([
 
 ReactDOM.render(
   <React.StrictMode>
-    <DataContext.Provider value={[null, null]}>
-      <RouterProvider router={router} />
-    </DataContext.Provider>
+    <CookiesProvider>
+      <UserContext.Provider value={[null, null]}>
+        <CookieAppWrapper>
+          <RouterProvider router={router} />
+        </CookieAppWrapper>
+      </UserContext.Provider>
+    </CookiesProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

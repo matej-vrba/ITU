@@ -7,8 +7,9 @@ from sqlalchemy import select,insert,update,delete
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
 from datetime import datetime
-
-
+from app.models import User,Project,project_user
+import secrets
+import string
 
 app = create_app()
 socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, debug=True)
@@ -31,14 +32,16 @@ def open_proj(data):
 
 
 @socketio.on('add-snippet')
-def add_snippet(data):
-    if(data['projectId'] is None):
+@app.route("/project/<projectId>/snippet/new", methods=["POST"], strict_slashes=False)
+def add_snippet(projectId):
+    if(projectId is None):
         return
 
     s = db.session.scalar(insert(Snippet).returning(Snippet),
-                           [{'title': "New snippet", "created_at": datetime.today(),'project_id': data['projectId']}])
+                           [{'title': "New snippet", "created_at": datetime.today(),'project_id': projectId}])
     db.session.commit()
-    emit('new-snippet', snippetToJsObj(s), to=data['projectId'])
+    socketio.emit('new-snippet', snippetToJsObj(s), to=projectId)
+    return snippetToJsObj(s)
 
 @socketio.on('update-snippet-title')
 def upodate_title(snippet_id, title):
@@ -88,3 +91,69 @@ def handle_send_message(data):
 
     # Fetch and broadcast all messages after inserting a new message
     handle_get_all_messages(snippet_id)
+@app.route("/create-user", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def create_user():
+    user = User()
+    db.session.add(user)
+    db.session.commit()
+    #after commiting user.id is set to user
+    return {"user_id":user.id}
+
+
+
+def generate_connection_string(length=16):
+    characters = string.ascii_letters + string.digits
+    connection_string = ''.join(secrets.choice(characters) for _ in range(length))
+    return connection_string
+
+@app.route("/project/create/<user_id>", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def create_project(user_id):
+    random_string = generate_connection_string()
+    print(random_string)
+    projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
+    db.session.add(projet)
+    db.session.commit()
+    #after commiting project.id is set to project
+    return {"project_id":projet.id}
+
+@app.route("/project/connect/<user_id>/<connection_string>", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def project_connect(user_id,connection_string):
+    #after commiting project.id is set to project
+    project = Project.query.filter_by(connection_string=connection_string).first()
+    if(project == None):
+        return jsonify(project_id=None)
+
+    users = User.query.all()
+    for u in users:
+        print(u.id)
+
+    user = User.query.filter_by(id=user_id).first()
+    #pokud user nepouziva projekt stane se userem projektu, a nebude tam pridavat i creatora
+    if(not user in project.users and user.id != project.creator):
+        project.users.append(user)
+        db.session.add(project)
+        db.session.commit()
+        
+    return jsonify(project_id=project.id)
+
+
+@app.route("/projects/<user_id>", methods=["GET"], strict_slashes=False)
+@cross_origin()
+def get_projects(user_id):
+    owned_projects = Project.query.filter_by(creator=user_id).all()
+    projects = Project.query.all()
+    user = User.query.filter_by(id=user_id).first()
+    collab_projects = []
+    for project in projects:
+        if user in project.users:
+            collab_projects.append(project)
+    
+    projects_json = []
+    #TODO project name
+    [projects_json.append({"id" : project.id,"name" : "todo","created" : project.created_at,"role" : "creator"}) for project in owned_projects]
+    [projects_json.append({"id" : project.id,"name" : "todo","created" : project.created_at,"role" : "collaborator"}) for project in collab_projects]
+
+    return jsonify(projects_json)

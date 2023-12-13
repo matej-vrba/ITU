@@ -1,15 +1,19 @@
-import { useState,useEffect } from 'react'
+import { useState,useEffect, useContext } from 'react'
 import './App.scss';
 import Header from './Header';
 import Categories from './Categories';
 import ProductList from './ProductList';
 import Footer from './Footer';
+import CreateButtom from './CreateButton';
+import ConnectionInput from './ConnectionInput';
 import { Outlet } from "react-router-dom";
 import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState';
+import { UserContext } from '.';
+import ProjectList from './ProjectList';
 
 function App({children}) {
-
+  const [isConnected, setIsConnected] = useState(socket.connected);
   useEffect(
     () => {
       function onConn(){
@@ -26,6 +30,12 @@ function App({children}) {
   return (
     <div className="App">
       <ConnectionState isConnected={ isConnected } />
+      {/* list your sessions */}
+        <ProjectList/>
+      {/* create button */}
+        <CreateButtom/>
+      {/* join via code */}
+      <ConnectionInput/>
       <Outlet />
     </div>
   );

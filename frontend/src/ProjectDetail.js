@@ -1,5 +1,4 @@
 import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
-import DataContext from './Project';
 import React, { useState,useEffect  } from 'react';
 import './Categories.css';
 import {socket} from "./socket"
