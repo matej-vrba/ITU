@@ -1,5 +1,5 @@
 from app import db, create_app
-from app.models import User,Advertisment,Category,Snippet,Project,Message
+from app.models import User,Advertisment,Snippet,Project,Message
 from datetime import datetime
 
 app = create_app()
