@@ -6,26 +6,23 @@ const ChatComponent = ({ id }) => {
 	const [messages, setMessages] = useState([]);
   
 	useEffect(() => {
-	  // Fetch all messages for the given snippetId
-	  fetchMessages();
-  
-	  // Listen for new messages
-	  socket.on('messages', (newMessages) => {
-		setMessages(newMessages);
-	  });
-  
-	  return () => {
-		socket.disconnect();
+		// Fetch all messages for the given snippetId
+		fetchMessages();
+	
+		// Listen for new messages
+		socket.on('messages', (newMessages) => {
+		  setMessages(newMessages);
+		});	
+		
+	  }, [id, socket]);
+	
+	  const fetchMessages = () => {
+		// Request all messages for the given snippetId
+		socket.emit('get-all-messages', id);
 	  };
-	}, [id]);
-  
-	const fetchMessages = () => {
-	  // Request all messages for the given snippetId
-	  socket.emit('get-all-messages', id);
-	};
   
 	const [newMessage, setNewMessage] = useState({ name: '', text: '' });
-  
+
 	const handleInputChange = (e) => {
 	  setNewMessage({ ...newMessage, [e.target.name]: e.target.value });
 	};
@@ -47,6 +44,7 @@ const ChatComponent = ({ id }) => {
 	};
   
 	return (
+
 	  <div className="comments">
 		{messages.map((message, index) => (
 		  <div key={index} className="hide-overflow">
@@ -56,6 +54,7 @@ const ChatComponent = ({ id }) => {
 			</div>
 		  </div>
 		))}
+
 		<div className="hide-overflow">
 		  <div className="comment cut-corner">
 			<input
