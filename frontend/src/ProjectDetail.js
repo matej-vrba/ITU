@@ -1,5 +1,5 @@
 import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
-import React, { useState,useEffect  } from 'react';
+import React, { useState,useEffect, useCallback  } from 'react';
 import './Categories.css';
 import {socket} from "./socket"
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -7,6 +7,8 @@ import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import TrashIcon from './icons/Trash';
 import ChatComponent from "./ChatComponent";
 import VoteComponent from "./VoteComponent";
+import { createElement } from 'react-syntax-highlighter';
+import Popup from 'reactjs-popup';
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -91,7 +93,13 @@ const navigate = useNavigate();
 
       <div className="code-wrapper">
         <div className="code-line"><span className="lang">C</span><span className="date">{date}</span></div>
-        <SyntaxHighlighter preTag={<p>aa</p>} wrapLines="true" showLineNumbers="true" language="javascript" style={monokai}>
+        <SyntaxHighlighter
+          preTag={<p>aa</p>}
+          wrapLines="true"
+          showLineNumbers="true"
+	        renderer={renderer}
+          language="javascript"
+          style={monokai}>
           {code}
         </SyntaxHighlighter>
       </div>
@@ -103,3 +111,38 @@ const navigate = useNavigate();
   )
 }
 export default ProjectDetail;
+
+function renderer({ rows, stylesheet, useInlineStyles }) {
+  const { id } = useLoaderData();
+
+  const submitComment = useCallback((e) => {
+    e.preventDefault();
+    console.log(event.target.elements.commentField.value)
+    console.log(id)
+    socket.timeout(5000).emit('add-comment',{
+      snippetId: id,
+      content: event.target.elements.commentField.value
+    }, () => {});
+  }, [id]);
+
+  return rows.map((node, i) =>
+    <span>
+    {createElement({
+      node,
+      stylesheet,
+      useInlineStyles,
+      key: `code-segement${i}`
+    })}
+      <span className="add-comment">
+        <Popup trigger=
+                 {<button>+</button>}
+               position="left center">
+          <form onSubmit={submitComment}>
+          <input name="commentField" className="commentField" type="text" />
+            <input className="btn" name="" type="submit" value="šabmit"/>
+          </form>
+        </Popup>
+      </span>
+    </span>
+  );
+}

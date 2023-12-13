@@ -9,58 +9,80 @@
 }
 
 .comments .comment{
-	position: relative;
-	background: var(--white);
-	margin-bottom: 1em;
-	box-shadow: 10px 10px 0px 0px var(--bg-4);
-	h4{
-			font-size: 1.1em;
-			padding: 0.25em 0.5em;
-			background: var(--green);
-		}
+		position: relative;
+		background: var(--white);
+		margin-bottom: 1em;
+		box-shadow: 10px 10px 0px 0px var(--bg-4);
+		h4{
+				font-size: 1.1em;
+					padding: 0.25em 0.5em;
+					background: var(--green);
+			}
 	p{
-			padding-left: 0.75em;
-			padding-bottom: 0.25em;
-		}
+				padding-left: 0.75em;
+					padding-bottom: 0.25em;
+			}
 	*{
-			color: var(--bg);
-		}
+				color: var(--bg);
+			}
 }
 
 .code-wrapper{
-	margin-bottom: 2em;
-	padding: 0;
-	box-shadow: 10px 10px 0px 0px var(--bg-4);
+		margin-bottom: 2em;
+		padding: 0;
+		box-shadow: 10px 10px 0px 0px var(--bg-4);
 }
 .code-line{
-	background: var(--yellow);
-	display: flex;
-	justify-content: space-between;
-	font-weight: 500;
-	.lang{
-			margin-left: 1em;
-		}
+		background: var(--yellow);
+		display: flex;
+		justify-content: space-between;
+		font-weight: 500;
+		.lang{
+					margin-left: 1em;
+			}
 	.date{
-			margin-right: 1em;
-		}
+				margin-right: 1em;
+			}
 	*{
-			color: var(--bg);
-		}
+				color: var(--bg);
+			}
 }
+
 pre{
 	background: var(--bg-alt) !important;
 	margin: 0;
-code{
-	&>span{
-			width: 100%;
-			display: block;
-			&>span:first-child{
-				border-right: 3px solid var(--gray);
-				margin-right: 0.2em;
-			}
-			&:hover{
-				background: var(--bg-4);
-			}
+	code{
+				&>span{
+						width: 100%;
+						display: flex;
+						justify-content: space-between;
+
+						&>span{
+								&>span:first-child{
+										border-right: 3px solid var(--gray);
+										margin-right: 0.2em;
+								}
+						}
+						&:hover{
+								background: var(--bg-4);
+						}
+						& .add-comment{
+								display: none;
+						}
+						&:hover .add-comment{
+								display: inline;
+						}
+				}
 		}
 }
+.popup-content {
+	form{
+					background: var(--bg-4);
+				display: flex;
+				flex-direction: column;
+				input{
+						width: fit-content;
+				}
+				padding: 0.2em;
+		}
 }
