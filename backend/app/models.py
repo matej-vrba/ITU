@@ -41,13 +41,6 @@ class Project(db.Model):
     creator: Mapped[int] = mapped_column(ForeignKey("user.id"))
     users: Mapped[List[User]] = relationship(secondary=project_user)
 
-
-class Category(db.Model):
-    __tablename__ = "category"
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256))
-    advertisments = db.relationship('Advertisment',secondary=advertisment_category,backref='categories')
-
 class Message(db.Model):
     __tablename__ = "message"
     id = db.Column(db.Integer, primary_key=True)
