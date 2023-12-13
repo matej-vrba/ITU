@@ -10,6 +10,7 @@ import { Outlet } from "react-router-dom";
 import { socket } from './socket';
 import { ConnectionState } from './components/ConnectionState';
 import { UserContext } from '.';
+import ProjectList from './ProjectList';
 
 function App({children}) {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -30,6 +31,7 @@ function App({children}) {
     <div className="App">
       <ConnectionState isConnected={ isConnected } />
       {/* list your sessions */}
+        <ProjectList/>
       {/* create button */}
         <CreateButtom/>
       {/* join via code */}

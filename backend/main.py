@@ -7,7 +7,7 @@ from sqlalchemy import select,insert,update,delete
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
 from datetime import datetime
-from app.models import User,Project
+from app.models import User,Project,project_user
 import secrets
 import string
 
@@ -118,3 +118,20 @@ def project_connect(user_id,connection_string):
     return jsonify(project_id=project.id)
 
 
+@app.route("/projects/<user_id>", methods=["GET"], strict_slashes=False)
+@cross_origin()
+def get_projects(user_id):
+    owned_projects = Project.query.filter_by(creator=user_id).all()
+    projects = Project.query.all()
+    user = User.query.filter_by(id=user_id).first()
+    collab_projects = []
+    for project in projects:
+        if user in project.users:
+            collab_projects.append(project)
+    
+    projects_json = []
+    #TODO project name
+    [projects_json.append({"id" : project.id,"name" : "todo","created" : project.created_at,"role" : "creator"}) for project in owned_projects]
+    [projects_json.append({"id" : project.id,"name" : "todo","created" : project.created_at,"role" : "collaborator"}) for project in collab_projects]
+
+    return jsonify(projects_json)
