@@ -134,25 +134,25 @@ def create_project(user_id):
     print(random_string)
 
     #original correct
-    # projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
-
-    #just for testing
-    ## START
     projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
-    db.session.add(projet)
-    db.session.commit()
 
-    snip = Snippet(title="Test snip", created_at=datetime.today(), code="""//sample code
-        #include <stdio.h>
+    # #just for testing
+    # ## START ###################################################3
+    # projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
+    # db.session.add(projet)
+    # db.session.commit()
 
-        int main(int argc, char *argv[]) {
-            printf("Hello world\\n")
-            return 0;
-        }""",project_id = projet.id)
-    db.session.add(snip)
-    db.session.commit()
-    projet.children.append(snip)
-    ## END OF TEST
+    # snip = Snippet(title="Test snip", created_at=datetime.today(), code="""//sample code
+    #     #include <stdio.h>
+
+    #     int main(int argc, char *argv[]) {
+    #         printf("Hello world\\n")
+    #         return 0;
+    #     }""",project_id = projet.id)
+    # db.session.add(snip)
+    # db.session.commit()
+    # projet.children.append(snip)
+    # ## END OF TEST ###################################################3
     
     db.session.add(projet)
     db.session.commit()
