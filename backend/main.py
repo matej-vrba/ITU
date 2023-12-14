@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
 from datetime import datetime
 from app.models import User,Project,project_user
+import asyncio
 import secrets
 import string
 
@@ -20,6 +21,9 @@ if __name__ == '__main__':
 
 def snippetToJsObj(s):
     return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y')}
+
+def messageToJsObj(s):
+    return {'name': s.name, 'message': s.message}
 
 @socketio.on('open-project')
 def open_proj(data):
@@ -69,14 +73,13 @@ def deleteSnippet(snippet_id):
     socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))}, to="{}".format(room_id))
     return jsonify(message="Snippet deleted")
 
-
-@socketio.on('get-all-messages')
+@app.route("/get-all-messages/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_messages(snippet_id):
     # Retrieve all messages for the given snippet_id
+    print(snippet_id);
     messages = Message.query.filter_by(snippet_id=snippet_id).all()
-    messages_data = [{'name': message.name, 'text': message.message, 'snippet_id': message.snippet_id} for message in messages]
-    print(messages_data)
-    emit('messages', messages_data)
+    messages_data = [messageToJsObj(message) for message in messages]
+    return jsonify(messages_data)
 
 @socketio.on('send-message')
 def handle_send_message(data):
@@ -85,13 +88,25 @@ def handle_send_message(data):
     snippet_id = data['snippetId']
 
     # Save the message to the database
-    new_message = Message(name=name, message=text, snippet_id=snippet_id)
-    db.session.add(new_message)
+    s = db.session.scalar(insert(Message).returning(Message),
+                           [{'name': name, "message": text,'snippet_id': snippet_id}])
     db.session.commit()
-
+    
     # Fetch and broadcast all messages after inserting a new message
-    handle_get_all_messages(snippet_id)
- 
+    emit('messages', [messageToJsObj(s)] , broadcast=True)
+    return messageToJsObj(s)
+    
+@socketio.on('add-comment')
+def handle_add_comment(data):
+    vote_title = data['content']
+    snippet_id = data['snippetId']
+    code_line = data['line']
+    new_vote = Vote(vote_title=vote_title, code_line=code_line, snippet_id=snippet_id, active=True)
+    db.session.add(new_vote)
+    db.session.commit()
+    
+    handle_get_all_votes(data['snippetId'])
+    
 @socketio.on('start-vote')
 def handle_new_vote(data):
     vote_title = data['vote_title']
@@ -107,7 +122,7 @@ def handle_new_vote(data):
 def handle_get_all_votes(data):
     votes = Vote.query.filter_by(snippet_id=data).all()
     #user = User.query.filer_by(id=data['userId']).all()
-    votes_data = [{'vote_title': vote.vote_title,'snippet_id': vote.snippet_id} for vote in votes]
+    votes_data = [{'vote_title': vote.vote_title,'snippet_id': vote.snippet_id, 'code_line': vote.code_line} for vote in votes]
     print(votes_data)
     emit('votes', votes_data)
     

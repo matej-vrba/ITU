@@ -4,30 +4,40 @@ import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
 
 const ChatComponent = ({ id }) => {
 	const [messages, setMessages] = useState([]);
+	const [newMessage, setNewMessage] = useState({ name: '', text: '' });
+
   
 	useEffect(() => {
 		// Fetch all messages for the given snippetId
 		fetchMessages();
+		
+		
 	
 		// Listen for new messages
 		socket.on('messages', (newMessages) => {
-		  setMessages(newMessages);
+			console.log("Received new message ", newMessages)
+			setMessages((messages) => [...messages, ...newMessages]);
 		});	
 		
 	  }, [id, socket]);
 	
-	  const fetchMessages = () => {
-		// Request all messages for the given snippetId
-		socket.emit('get-all-messages', id);
+	  const fetchMessages = async () => {
+		try {
+			const response = await fetch(`http://localhost:5000/get-all-messages/${id}`);
+			const data = await response.json();
+			console.log(data);
+			setMessages(data);
+			
+		  } catch (error) {
+			console.error('Error fetching messages:', error);
+		  }
 	  };
   
-	const [newMessage, setNewMessage] = useState({ name: '', text: '' });
-
 	const handleInputChange = (e) => {
 	  setNewMessage({ ...newMessage, [e.target.name]: e.target.value });
 	};
   
-	const handleSendMessage = () => {
+	const handleSendMessage = async () => {
 	  if (newMessage.name && newMessage.text) {
 		const messageData = {
 		  name: newMessage.name,
@@ -50,7 +60,7 @@ const ChatComponent = ({ id }) => {
 		  <div key={index} className="hide-overflow">
 			<div className="comment cut-corner">
 			  <h4>{message.name}</h4>
-			  <p>{message.text}</p>
+			  <p>{message.message}</p>
 			</div>
 		  </div>
 		))}

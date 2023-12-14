@@ -49,7 +49,13 @@ const VoteComponent = ({ id }) => {
 			<h2>Active Votes</h2>
 			{votes.map((vote, index) => (
 			<div key={index} className="vote-row">
-				<p>{`Vote: ${vote.vote_title}`}</p>
+				{vote.code_line == null 
+				? 
+					<p>{`Vote: ${vote.vote_title}`}</p>
+				:
+					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`}</p>
+				}
+				
 			</div>
 			))}
 			<div className="vote-input">
