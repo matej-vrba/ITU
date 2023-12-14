@@ -68,6 +68,13 @@ pre{
 						}
 						& .add-comment{
 								display: none;
+										height: 100%;
+								button{
+										height: 100%;
+										width: 1.4em;
+										margin: 0;
+										padding: 0;
+								}
 						}
 						&:hover .add-comment{
 								display: inline;
