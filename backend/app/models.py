@@ -36,6 +36,7 @@ class Project(db.Model):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at = db.Column(db.Date())
+    name: Mapped[str] = mapped_column(String(150),nullable=True)  
     connection_string: Mapped[str] = mapped_column(String(150),nullable=True,unique=True)
     children: Mapped[List["Snippet"]] = relationship()
     creator: Mapped[int] = mapped_column(ForeignKey("user.id"))

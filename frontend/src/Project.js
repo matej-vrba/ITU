@@ -1,5 +1,5 @@
 import './Project.scss';
-import { useState,useEffect } from 'react'
+import { useState,useEffect,useRef } from 'react'
 import { Outlet, NavLink, Link, useParams, useNavigate } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
@@ -20,8 +20,32 @@ function Projects({params}) {
   // list of snippets for this project (displayed on the left)
   const [snippets, setSnippets] = useState([]);
 
+  const [projectData, setProjectData] = useState(null);
+  const [newProjectName, setNewProjectName] = useState('');
+  const [isHovered, setIsHovered] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
+  const inputRef = useRef(null);
+
+
   useEffect(
     () => {
+
+      //fetches almost all project data and store it in "projectData"
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000/project/${id}`);
+          const data = await response.json();
+          setProjectData(data);
+          setNewProjectName(data.name);
+        } catch (error) {
+          console.error('Error fetching project data:', error);
+          // Handle errors as needed
+        }
+      };
+
+      fetchData();
+      
+
       // When socket gets disconnected, set state appropriately to
       // display or hide notice on top of the screen
       function onConn(){
@@ -57,8 +81,34 @@ function Projects({params}) {
       socket.on('connect', onConn);
       socket.on('disconnect', onDis);
       socket.on('set-snippet-title', (msg) => setSnippetTitle(msg));
-    }
+    }, [id]
   )
+
+
+  const handleInputChange = (e) => {
+    setNewProjectName(e.target.value);
+  };
+
+  const handleInputBlur = () => {
+    // Call your function to rename the project
+    // You may want to add additional validation here
+    // to ensure the new project name is not empty or the same as the current name
+
+    // Update state and reset editing mode
+    setProjectData((prevData) => ({ ...prevData, name: newProjectName }));
+    console.log("name "+newProjectName);
+    fetch('http://localhost:5000/project/' + id + '/name/'+newProjectName, { method: 'POST' });
+  };
+
+  const handleInputKeyPress = (e) => {
+    // If Enter key is pressed, call handleInputBlur
+    if (e.key === 'Enter') {
+      handleInputBlur();
+        // Blur the input to lose focus
+        inputRef.current.blur();
+    }
+  };
+
 
 
   // clicking new snippet only sends event to backend with projectId it
@@ -114,6 +164,25 @@ function Projects({params}) {
         </p>
         <div className="sidebar">
           <h2>Code2Gether</h2>
+
+          <div className={`editable-project-name${
+              isHovered ? '-hover' : ''} ${isClicked ? '-clicked' : ''}`}
+              >
+            <input
+                type="text"
+                value={newProjectName}
+                onChange={handleInputChange}
+                onBlur={handleInputBlur}
+                onKeyDown={handleInputKeyPress}
+                ref={inputRef}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onMouseDown={() => setIsClicked(true)}
+                onMouseUp={() => setIsClicked(false)}
+              />
+          </div>
+
+
           <div id="snippetList" className="list">
             <button onClick={addSnippet} >New <PlusIcon/></button>
             {list}
