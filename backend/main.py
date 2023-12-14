@@ -134,7 +134,7 @@ def create_project(user_id):
     print(random_string)
 
     #original correct
-    projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string)
+    projet = Project(created_at=datetime.today(),creator=user_id,connection_string=random_string,name="Untitled project")
 
     # #just for testing
     # ## START ###################################################3
@@ -216,3 +216,19 @@ def delete_projects(project_id):
     db.session.delete(project)
     db.session.commit()
     return jsonify(message="Project deleted")
+
+@app.route("/project/<project_id>", methods=["GET"], strict_slashes=False)
+@cross_origin()
+def get_project(project_id):
+    project = Project.query.filter_by(id=project_id).first()
+    print("aa")
+    return jsonify(name=project.name,id=project.id,created_at=project.created_at,creator=project.creator,connection_string=project.connection_string)
+
+@app.route("/project/<project_id>/name/<project_name>", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def set_project_name(project_id,project_name):
+    project = Project.query.filter_by(id=project_id).first()
+    project.name=project_name
+    db.session.add(project)
+    db.session.commit()
+    return "set name: "+ project_name
