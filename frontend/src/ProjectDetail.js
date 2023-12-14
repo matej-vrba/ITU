@@ -115,13 +115,14 @@ export default ProjectDetail;
 function renderer({ rows, stylesheet, useInlineStyles }) {
   const { id } = useLoaderData();
 
-  const submitComment = useCallback((e) => {
+  const submitComment = useCallback((lineNumber, e) => {
     e.preventDefault();
     console.log(event.target.elements.commentField.value)
     console.log(id)
     socket.timeout(5000).emit('add-comment',{
       snippetId: id,
-      content: event.target.elements.commentField.value
+      content: event.target.elements.commentField.value,
+      line: lineNumber+1
     }, () => {});
   }, [id]);
 
@@ -137,7 +138,7 @@ function renderer({ rows, stylesheet, useInlineStyles }) {
         <Popup trigger=
                  {<button>+</button>}
                position="left center">
-          <form onSubmit={submitComment}>
+          <form onSubmit={(e) => submitComment(i, e)}>
           <input name="commentField" className="commentField" type="text" />
             <input className="btn" name="" type="submit" value="šabmit"/>
           </form>
