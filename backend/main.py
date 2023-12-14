@@ -26,7 +26,7 @@ def messageToJsObj(s):
     return {'name': s.name, 'message': s.message}
 
 def voteToJsObj(s):
-    return {'vote_title': s.vote_title, 'code_line': s.code_line, 'active': s.active}
+    return {'id': s.id, 'vote_title': s.vote_title, 'code_line': s.code_line, 'active': s.active}
 
 @socketio.on('open-project')
 def open_proj(data):
@@ -125,8 +125,8 @@ def handle_new_vote(data):
     return voteToJsObj(s)
        
 @app.route("/get-all-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
-def handle_get_all_votes(data):
-    votes = Vote.query.filter_by(snippet_id=data).all()
+def handle_get_all_votes(snippet_id):
+    votes = Vote.query.filter_by(snippet_id=snippet_id).all()
     #user = User.query.filer_by(id=data['userId']).all()
     votes_data = [voteToJsObj(vote) for vote in votes]
     return jsonify(votes_data)

@@ -58,6 +58,14 @@ class Vote(db.Model):
     snippet_id: Mapped[int] = mapped_column(ForeignKey("snippets.id"))
     active = db.Column(db.Boolean, default=True, nullable=False)
     
+class Vote_result(db.Model):
+    __tablename__ = "vote_results"
+    id = db.Column(db.Integer, primary_key=True)
+    vote_id: Mapped[int] = mapped_column(ForeignKey("vote.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    vote_state = db.Column(db.Boolean)
+    
+    
 class Advertisment(db.Model):
 
     def serialize(self):
