@@ -25,6 +25,9 @@ def snippetToJsObj(s):
 def messageToJsObj(s):
     return {'name': s.name, 'message': s.message}
 
+def voteToJsObj(s):
+    return {'vote_title': s.vote_title, 'code_line': s.code_line, 'active': s.active}
+
 @socketio.on('open-project')
 def open_proj(data):
     if(data['projectId'] is None):
@@ -101,30 +104,32 @@ def handle_add_comment(data):
     vote_title = data['content']
     snippet_id = data['snippetId']
     code_line = data['line']
+    user_id = data['user_id']
     new_vote = Vote(vote_title=vote_title, code_line=code_line, snippet_id=snippet_id, active=True)
     db.session.add(new_vote)
     db.session.commit()
     
     handle_get_all_votes(data['snippetId'])
-    
-@socketio.on('start-vote')
+
+@socketio.on('start-vote')    
 def handle_new_vote(data):
     vote_title = data['vote_title']
     snippet_id = data['snippetId']
+    user_id = data['user_id']
     
-    new_vote = Vote(vote_title=vote_title, snippet_id=snippet_id, active=True)
-    db.session.add(new_vote)
+    s = db.session.scalar(insert(Vote).returning(Vote),
+                        [{'vote_title': vote_title, 'created_by': user_id, 'snippet_id': snippet_id, 'active': True}])
     db.session.commit()
-    
-    handle_get_all_votes(snippet_id)
+
+    emit('votes', [voteToJsObj(s)] , broadcast=True)
+    return voteToJsObj(s)
        
-@socketio.on('get-all-votes')
+@app.route("/get-all-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_votes(data):
     votes = Vote.query.filter_by(snippet_id=data).all()
     #user = User.query.filer_by(id=data['userId']).all()
-    votes_data = [{'vote_title': vote.vote_title,'snippet_id': vote.snippet_id, 'code_line': vote.code_line} for vote in votes]
-    print(votes_data)
-    emit('votes', votes_data)
+    votes_data = [voteToJsObj(vote) for vote in votes]
+    return jsonify(votes_data)
     
 @app.route("/create-user", methods=["POST"], strict_slashes=False)
 @cross_origin()

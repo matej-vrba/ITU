@@ -74,34 +74,51 @@ function ProjectDetail({params}) {
 
 
 const navigate = useNavigate();
-  const del = (e) => {
-    e.preventDefault();
-    fetch('http://localhost:5000/snippets/' + id, { method: 'DELETE' })
-      .then(response => {
-        navigate('/project/' + 1);//TODO
-      }
-      ) ;
-    return false;
-  }
-
+const del = (e) => {
+  e.preventDefault();
+  fetch('http://localhost:5000/snippets/' + id, { method: 'DELETE' })
+    .then(response => {
+      navigate('/project/' + 1);//TODO
+    }
+    ) ;
+  return false;
+}
 
   return (
     <>
 
-      <h3><InlineEdit value={title} setValue={setTitle} titleId={id} /><a title="Delete this snippet" onClick={del} href="/project"><TrashIcon/></a></h3>
-
+      <h3>
+        <InlineEdit value={title} setValue={setTitle} titleId={id} />
+        <a title="Delete this snippet" onClick={del} href="/project">
+          <TrashIcon />
+        </a>
+      </h3>
 
       <div className="code-wrapper">
-        <div className="code-line"><span className="lang">C</span><span className="date">{date}</span></div>
-        <SyntaxHighlighter
-          preTag={<p>aa</p>}
-          wrapLines="true"
-          showLineNumbers="true"
-	        renderer={renderer}
-          language="javascript"
-          style={monokai}>
-          {code}
-        </SyntaxHighlighter>
+        <div className="code-line">
+          <span className="lang">C</span>
+          <span className="date">{date}</span>
+        </div>
+
+        {code ? (
+          <SyntaxHighlighter
+            preTag={<p>aa</p>}
+            wrapLines={true}
+            showLineNumbers={true}
+            renderer={renderer}
+            language="javascript"
+            style={monokai}
+          >
+            {code}
+          </SyntaxHighlighter>
+        ) : (
+          <input
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="Enter code here"
+          />
+        )}
       </div>
       <ChatComponent 
       id={id}/>

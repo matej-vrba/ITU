@@ -19,9 +19,15 @@ const VoteComponent = ({ id }) => {
 		
 	  }, [id, socket]);
 	  
-	  const fetchVotes = () => {
-		
-		socket.emit('get-all-votes', id);
+	  const fetchVotes = async () => {
+		try {
+			const response = await fetch(`https://localhost:5000/get-all-votes/${id}`);
+			const data = await response.json();
+			console.log(data);
+			setVotes(data);
+		} catch (error) {
+			console.error('Error fetching votes:', error);
+		}
 	  };
 
 	const [newVote, setNewVote] = useState({ duration: '', message: '' });

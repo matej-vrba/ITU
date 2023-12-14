@@ -53,13 +53,9 @@ class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     vote_title: Mapped[str] = mapped_column(String(256))
     code_line = db.Column(db.Integer, nullable=True)
-    #created_by: Mapped[int] = mapped_column(ForeignKey("project_user.id"))
+    created_by: Mapped[int] = mapped_column(ForeignKey("user.id"))
     snippet_id: Mapped[int] = mapped_column(ForeignKey("snippets.id"))
     active = db.Column(db.Boolean, default=True, nullable=False)
-    
-class UserVotes(db.Model):
-    __tablename__ = "vote"
-    
     
 class Advertisment(db.Model):
 

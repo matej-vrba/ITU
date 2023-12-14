@@ -4,15 +4,11 @@ import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
 
 const ChatComponent = ({ id }) => {
 	const [messages, setMessages] = useState([]);
-	const [newMessage, setNewMessage] = useState({ name: '', text: '' });
-
   
 	useEffect(() => {
 		// Fetch all messages for the given snippetId
 		fetchMessages();
 		
-		
-	
 		// Listen for new messages
 		socket.on('messages', (newMessages) => {
 			console.log("Received new message ", newMessages)
@@ -32,6 +28,9 @@ const ChatComponent = ({ id }) => {
 			console.error('Error fetching messages:', error);
 		  }
 	  };
+
+	  const [newMessage, setNewMessage] = useState({ name: '', text: '' });
+
   
 	const handleInputChange = (e) => {
 	  setNewMessage({ ...newMessage, [e.target.name]: e.target.value });
