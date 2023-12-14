@@ -53,7 +53,6 @@ export default function CodeComponent(){
   return(
 
         <SyntaxHighlighter
-          preTag={<p>aa</p>}
           wrapLines={true}
           showLineNumbers={true}
           renderer={renderer}
@@ -80,7 +79,7 @@ function renderer({ rows, stylesheet, useInlineStyles }) {
   }, [id]);
 
   return rows.map((node, i) =>
-    <span>
+    <span key={i}>
     {createElement({
       node,
       stylesheet,
