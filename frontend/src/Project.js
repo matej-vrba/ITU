@@ -81,7 +81,7 @@ function Projects({params}) {
       socket.on('connect', onConn);
       socket.on('disconnect', onDis);
       socket.on('set-snippet-title', (msg) => setSnippetTitle(msg));
-    }, [id]
+    }
   )
 
 
