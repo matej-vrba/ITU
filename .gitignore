@@ -24,3 +24,4 @@ instance/
 .idea/
 
 /Zadani.pdf
+/backend/itu_data.db
