@@ -158,7 +158,6 @@ def handle_accept_vote(data):
 
     
     emit('voteRes', [resultToJsObj(s)], broadcast=True)
-    return resultToJsObj(s)
 
 @app.route("/get-all-results/<vote_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_results(vote_id):

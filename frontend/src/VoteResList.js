@@ -13,9 +13,11 @@ const VoteResList = ({ id }) => {
     fetchResult();
 
     socket.on('voteRes', (newResults) => {
-      console.log("Mám: ", newResults);
-      setVoteRes((newResults));
-    });
+      console.log("Mám: ", newResults.id);
+	  console.log("ID: ", id);
+	  setVoteRes((voteRes) =>
+      voteRes.map((vote) => (vote.id === newResults.id ? newResults : vote))
+    );    });
   }, [id, socket]);
 
   const fetchResult = async () => {
