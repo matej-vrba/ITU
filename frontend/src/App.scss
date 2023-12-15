@@ -46,6 +46,11 @@ h2{
 	  padding: 0.1em;
 }
 
+h4{
+	  color: var(--pink);
+	  padding: 0.1em;
+}
+
 h3{
 	  color: var(--yellow);
 	  display: flex;
@@ -54,21 +59,26 @@ h3{
 		  display: inline-block;
 		  margin-left: 1em;
 	  }
-	  input{
-		  width: 100%;
-	  color: var(--yellow);
-	  background: unset;
-	  border: none;
-	  font-weight: 500;
-	  &:active{
-		  box-shadow: none;
-		  outline: none;
-	  }
-	  &:focus{
-		  outline: none;
-
-	  }
 }
+
+input.inline-edit{
+	width: 100%;
+	color: inherit;
+	background: unset;
+	border: none;
+	font-weight: 500;
+	padding-left: 0.17em;
+	&:hover{
+			background: var(--bg-3);
+		}
+	&:active{
+	  box-shadow: none;
+	  outline: none;
+  }
+  &:focus{
+			background: var(--bg-3);
+			outline: none;
+  }
 }
 
 

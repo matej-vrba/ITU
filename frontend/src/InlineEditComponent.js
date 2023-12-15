@@ -39,6 +39,7 @@ export default function InlineEdit ({ value, setValue, endpoint, id, listenEvent
 
   return (
     <input
+      className="inline-edit"
       type="text"
       aria-label="Field name"
       value={value}

@@ -139,10 +139,9 @@ function Projects({params}) {
         <div className="sidebar">
           <h2>Code2Gether</h2>
 
-          <div className={`editable-project-name${
-              isHovered ? '-hover' : ''} ${isClicked ? '-clicked' : ''}`} >
+          <h4>
           <InlineEdit value={newProjectName} endpoint={`project/${id}/set-title`} setValue={setNewProjectName} id={id} listenEvent="project-title-changed" />
-          </div>
+          </h4>
 
 
           <div id="snippetList" className="list">
