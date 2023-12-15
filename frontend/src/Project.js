@@ -1,22 +1,29 @@
 import './Project.scss';
 import { useState,useEffect,useRef } from 'react'
-import { Outlet, NavLink, Link, useParams, useNavigate } from "react-router-dom";
+import { Outlet, NavLink, Link, useParams, useNavigate, useLoaderData } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
 import {socket} from "./socket"
 import { ConnectionState } from './components/ConnectionState';
 
 export async function loader({ params }) {
-  var id = params.id;
-  socket.timeout(5000).emit('open-project', {projectId: id});
+  var hash = params.id;
+  console.log("hash"+hash);
+  var actual_id = 0;
+  console.log("called"+hash);
+  const response = await fetch(`http://localhost:5000/project/hash/${hash}`, { method: "GET" });
+  const data = await response.json();
+  actual_id = data;
 
-  return { id };
+  socket.timeout(5000).emit('open-project', {projectId: actual_id.id});
+  return {id:actual_id.id,hash:hash}
+  // return { id };
 }
 
 function Projects({params}) {
   const [isConnected, setIsConnected] = useState(socket.connected);
-
-  let { id } = useParams();
+  const { id,hash } = useLoaderData();
+  // let { id } = useParams();
   // list of snippets for this project (displayed on the left)
   const [snippets, setSnippets] = useState([]);
 
@@ -29,7 +36,7 @@ function Projects({params}) {
 
   useEffect(
     () => {
-
+      console.log("effect");
       //fetches almost all project data and store it in "projectData"
       const fetchData = async () => {
         try {
@@ -81,7 +88,7 @@ function Projects({params}) {
       socket.on('connect', onConn);
       socket.on('disconnect', onDis);
       socket.on('set-snippet-title', (msg) => setSnippetTitle(msg));
-    }, [id]
+    },[]
   )
 
 
@@ -119,7 +126,7 @@ function Projects({params}) {
     .then(response => response.json())
     .then(response => {
         setSnippets([...snippets, response])
-      navigate("/project/"+id + '/' + response['id']);
+      navigate("/project/"+hash + '/' + response['id']);
 
     })
   }
@@ -142,7 +149,7 @@ function Projects({params}) {
       return(
         <NavLink draggable="false"
               className="btn text-left"
-              to={"/project/" + id + '/' + s['id']}
+              to={"/project/" + hash + '/' + s['id']}
               onClick={()=>{
                 setTitle(s['title']);
               }

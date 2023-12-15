@@ -177,7 +177,7 @@ def create_project(user_id):
     db.session.add(projet)
     db.session.commit()
     #after commiting project.id is set to project
-    return {"project_id":projet.id}
+    return {"project_id":projet.id,"project_hash":random_string}
 
 @app.route("/project/connect/<user_id>/<connection_string>", methods=["POST"], strict_slashes=False)
 @cross_origin()
@@ -198,7 +198,7 @@ def project_connect(user_id,connection_string):
         db.session.add(project)
         db.session.commit()
         
-    return jsonify(project_id=project.id)
+    return jsonify(project_id=project.id,project_hash=project.connection_string)
 
 
 @app.route("/projects/<user_id>", methods=["GET"], strict_slashes=False)
@@ -216,12 +216,14 @@ def get_projects(user_id):
     [projects_json.append({"id" : project.id,
                            "name" : "todo",
                            "created" : project.created_at,
+                           "hash" : project.connection_string,
                            "role" : "creator",
                            "code":project.children[0].code if project.children != [] else "empty",}
                            ) for project in owned_projects]
     [projects_json.append({"id" : project.id,
                         "name" : "todo",
                         "created" : project.created_at,
+                        "hash" : project.connection_string,
                         "role" : "collab",
                         "code":project.children[0].code if project.children != [] else "empty",}
                         ) for project in collab_projects]
@@ -241,7 +243,6 @@ def delete_projects(project_id):
 @cross_origin()
 def get_project(project_id):
     project = Project.query.filter_by(id=project_id).first()
-    print("aa")
     return jsonify(name=project.name,id=project.id,created_at=project.created_at,creator=project.creator,connection_string=project.connection_string)
 
 @app.route("/project/<project_id>/name/<project_name>", methods=["POST"], strict_slashes=False)
@@ -252,3 +253,13 @@ def set_project_name(project_id,project_name):
     db.session.add(project)
     db.session.commit()
     return "set name: "+ project_name
+
+
+
+@app.route("/project/hash/<hash>/", methods=["GET"], strict_slashes=False)
+@cross_origin()
+def project_id_from_hash(hash):
+
+    project = Project.query.filter_by(connection_string=hash).first()
+    return jsonify(id=project.id)
+

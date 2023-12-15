@@ -27,7 +27,9 @@ const ConnectionInput = () => {
       if(responseData.project_id)
       {
         console.log("Connectiong to project: ",responseData.project_id);
-        navigate("project/"+responseData.project_id);
+        // navigate("project/"+responseData.project_id);
+        navigate("project/"+responseData.project_hash);
+
 
       }
       else

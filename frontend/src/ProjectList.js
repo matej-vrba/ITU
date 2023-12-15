@@ -38,7 +38,7 @@ const ProjectList = () => {
         <div className="project-list">
             <div className="project-icons">
                 {projects.map(project => (
-                <Link to={`/project/${project.id}`} key={project.id} className="project-icon">
+                <Link to={`/project/${project.hash}`} key={project.id} className="project-icon">
                     <div className="project-overlay">
                         {/* <Link onClick={() => del(project.id)} className='trash-icon'><TrashIcon/></Link> */}
                         {project.role === 'creator' && (

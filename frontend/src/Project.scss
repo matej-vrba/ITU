@@ -97,21 +97,25 @@ pre{
   .editable-project-name input {
 	width: 100%;
 	padding: 5px;
-	border: none;
 	background: none;
-	border-radius: 3px;
 	font-size: 16px;
-	transition: all 0.3s ease;
+	text-align: center;
+
+	color: #7e103e;
+	border: solid transparent;
+	border-radius: 3px;
   }
   
-  .editable-project-name.hover input {
+  .editable-project-name-hover input {
 	width: 100%;
-	background-color: red;
-	border-color: red;
+	padding: 5px;
+	background: none;
+	font-size: 16px;
+	text-align: center;
+
+	border: solid;
+	border-color: #7e103e;
+	color: #7e103e;
+	border-radius: 3px;
   }
   
-  .editable-project-name.clicked input {
-	width: 100%;
-	background-color: blue;
-	border-color: blue;
-  }

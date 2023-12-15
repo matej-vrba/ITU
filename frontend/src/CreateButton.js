@@ -15,9 +15,10 @@ const CreateButtom = () => {
     .then(responseData => {
       // Access the user_id from the resolved Promise
     const projectId = responseData.project_id;
+    const projectHash = responseData.project_hash;
       
       console.log("Created project: ", projectId);
-      navigate("project/"+projectId);
+      navigate("project/"+projectHash);
 
     })
   };

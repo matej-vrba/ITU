@@ -12,6 +12,7 @@ import Popup from 'reactjs-popup';
 
 export async function loader({ params }) {
   var id = params.snippetId;
+  console.log(params);
 
   //socket.timeout(5000).emit('get-snippet-title', id, () => {});
 
