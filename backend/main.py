@@ -2,10 +2,11 @@ from app import create_app, db
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask import Blueprint,jsonify,redirect
 from flask_cors import CORS, cross_origin
-from app.models import Snippet,Message,Vote
-from sqlalchemy import select,insert,update,delete
+from app.models import Snippet,Message,Vote, Vote_result
+from sqlalchemy import select,insert,update,delete, and_
 from sqlalchemy.orm import Session
 from sqlalchemy import bindparam
+from sqlalchemy import func
 from datetime import datetime
 from app.models import User,Project,project_user
 import asyncio
@@ -28,11 +29,17 @@ def messageToJsObj(s):
 def voteToJsObj(s):
     return {'id': s.id, 'vote_title': s.vote_title, 'code_line': s.code_line, 'active': s.active}
 
+def resultToJsObj(s):
+    return {'id': s.id, 'vote_id': s.vote_id, 'user_id': s.user_id, 'vote_state': s.vote_state}
+
+
+
 @socketio.on('open-project')
 def open_proj(data):
+    print(data);
     if(data['projectId'] is None):
         return
-    print("join " + data['projectId'])
+    print("join " + str(data['projectId']))
     join_room("{}".format(data['projectId']))
     c = db.session.scalars(select(Snippet).where(Snippet.project_id.is_(data['projectId']))).all()
     emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))})
@@ -105,12 +112,14 @@ def handle_add_comment(data):
     snippet_id = data['snippetId']
     code_line = data['line']
     user_id = data['user_id']
-    new_vote = Vote(vote_title=vote_title, code_line=code_line, snippet_id=snippet_id, active=True)
-    db.session.add(new_vote)
+    
+    s = db.session.scalar(insert(Vote).returning(Vote),
+                          [{'vote_title': vote_title, 'created_by': user_id, 'code_line': code_line, 'snippet_id': snippet_id, 'active': True}])
     db.session.commit()
     
-    handle_get_all_votes(data['snippetId'])
-
+    emit('votes', [voteToJsObj(s)] , broadcast=True)
+    return voteToJsObj(s)
+    
 @socketio.on('start-vote')    
 def handle_new_vote(data):
     vote_title = data['vote_title']
@@ -123,6 +132,39 @@ def handle_new_vote(data):
 
     emit('votes', [voteToJsObj(s)] , broadcast=True)
     return voteToJsObj(s)
+
+@socketio.on('accept-vote')
+def handle_accept_vote(data):
+    vote_id = data['vote_id']
+    user_id = data['user_id']
+    vote_state = data['status']
+    
+    existing_vote_count = db.session.query(func.count(Vote_result.id)) \
+    .filter_by(vote_id=vote_id, user_id=user_id).scalar()
+
+    print(existing_vote_count)
+    if( existing_vote_count == 0 ):
+        s = db.session.scalar(insert(Vote_result).returning(Vote_result),
+                          [{'vote_id': vote_id, 'user_id': user_id, 'vote_state': vote_state}])
+        
+    else:
+        db.session.connection().execute(
+            update(Vote_result)
+            .where(and_(Vote_result.user_id == user_id, Vote_result.vote_id == vote_id))
+            .values(vote_state=vote_state)
+        )
+        s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id and Vote_result.vote_id == vote_id))
+
+    db.session.commit()
+    
+    emit('voteRes', [resultToJsObj(s)], broadcast=True)
+    return resultToJsObj(s)
+
+@app.route("/get-all-results/<vote_id>", methods=["GET"], strict_slashes=False)
+def handle_get_all_results(vote_id):
+    results = Vote_result.query.filter_by(vote_id=vote_id)
+    results_data = [resultToJsObj(result) for result in results]
+    return jsonify(results_data)
        
 @app.route("/get-all-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_votes(snippet_id):
@@ -139,8 +181,6 @@ def create_user():
     db.session.commit()
     #after commiting user.id is set to user
     return {"user_id":user.id}
-
-
 
 def generate_connection_string(length=16):
     characters = string.ascii_letters + string.digits

@@ -45,6 +45,7 @@ const InlineEdit = ({ value, setValue, titleId }) => {
 
 function ProjectDetail({params}) {
   const { id } = useLoaderData();
+  console.log(id);
   const [title, setTitle] = useState("An unknown snippet");
 
   useEffect(

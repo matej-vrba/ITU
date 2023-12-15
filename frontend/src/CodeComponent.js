@@ -1,6 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 import React, { useState,useEffect, useCallback  } from 'react';
 import {socket} from "./socket"
+import { useCookies } from 'react-cookie';
 import { createElement } from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
@@ -66,7 +67,8 @@ export default function CodeComponent(){
 
 function renderer({ rows, stylesheet, useInlineStyles }) {
   const { id } = useLoaderData();
-
+  const [cookies] = useCookies(['user_id']);
+  let user_id = cookies.user_id
   const submitComment = useCallback((lineNumber, e) => {
     e.preventDefault();
     console.log(event.target.elements.commentField.value)
@@ -74,7 +76,8 @@ function renderer({ rows, stylesheet, useInlineStyles }) {
     socket.timeout(5000).emit('add-comment',{
       snippetId: id,
       content: event.target.elements.commentField.value,
-      line: lineNumber+1
+      line: lineNumber+1,
+      user_id: user_id
     }, () => {});
   }, [id]);
 

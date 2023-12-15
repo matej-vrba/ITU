@@ -2,6 +2,7 @@ import {socket} from "./socket"
 import { useCookies } from 'react-cookie';
 import React, { useState,useEffect  } from 'react';
 import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
+import VoteResList from './VoteResList';
 
 const VoteComponent = ({ id }) => {
 	const [votes, setVotes] = useState([]);
@@ -12,11 +13,12 @@ const VoteComponent = ({ id }) => {
 		
 		// Fetch all messages for the given snippetId
 		fetchVotes();
+		
 		// Listen for new votes
 		socket.on('votes', (newVotes) => {
-			setVotes(newVotes);
+			setVotes((votes) => [...votes, ...newVotes]);
 		  });
-	
+		  
 		
 	  }, [id, socket]);
 	  
@@ -32,7 +34,6 @@ const VoteComponent = ({ id }) => {
 	  };
 
 	const [newVote, setNewVote] = useState({ duration: '', message: '' });
-	const [votingResults, setVotingResults] = useState({});
 
 	const handleVote = () => {
 		if (newVote.message) {
@@ -47,32 +48,10 @@ const VoteComponent = ({ id }) => {
 	
 		  // Clear the input fields
 		  setNewVote({ vote: '' });
-		  setVotingResults({});
 
 		}
 	  };
 
-	const handleAccept = (id,index) => {
-
-		const voteAcc = {
-			vote_id: id,
-			user_id: userId,
-			status: true,
-		}
-
-		socket.emit('accept-vote',voteAcc);
-		setVotingResults({ ...votingResults, [index]: true });
-	};
-
-	const handleDecline = (id,index) => {
-		const voteDeny = {
-			vote_id: id,
-			user_id: userId,
-			status: false,
-		}
-		socket.emit('deny-vote',voteDeny);
-		setVotingResults({ ...votingResults, [index]: false });
-	};
 
 	return (
 
@@ -81,15 +60,17 @@ const VoteComponent = ({ id }) => {
 				{votes.map((vote, index) => (
 				<div key={index} className="vote-row">
 				{vote.code_line == null ?
-					<p>{`Vote: ${vote.vote_title}`}</p> :
-					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`}</p>
-				}
-				{!votingResults[index] && (
 					<>
-					<button onClick={() => handleAccept(vote.id,index)}>Accept</button>
-					<button onClick={() => handleDecline(vote.id,index)}>Decline</button>
+					<p>{`Vote: ${vote.vote_title}`} <VoteResList
+						id={vote.id}/></p>
 					</>
-				)}
+					:
+					<>
+					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`} <VoteResList
+							id={vote.id}/></p>
+					</>
+				}
+				
 				</div>
 			))}
 			<div className="vote-input">
