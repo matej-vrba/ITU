@@ -22,6 +22,7 @@ const VoteResList = ({ id }) => {
     try {
       const response = await fetch(`http://localhost:5000/get-all-results/${id}`);
       const data = await response.json();
+	  console.log("AAAAA");
       console.log(data);
       setVoteRes(data);
     } catch (error) {
@@ -29,19 +30,37 @@ const VoteResList = ({ id }) => {
     }
   };
 
+  const handleAccept = async () => {
+    const voteAcc = {
+      vote_id: id,
+      user_id: userId,
+      status: true,
+    };
+    socket.emit('accept-vote', voteAcc);
+
+  };
+
+  const handleDecline = async () => {
+    const voteDeny = {
+      vote_id: id,
+      user_id: userId,
+      status: false,
+    };
+    socket.emit('accept-vote', voteDeny);
+  };
+
   return (
 	<>
-	{voteRes.map((voteR,index) => (
-		<>
-		{voteR.user_id === userId ?
-			<VoteDetail
-			id={voteR.id}
-			voteRes={voteR}/> :
-			<span>bbbbb</span>
-		}
-		</>
-	))}
-	
+		{voteRes.map((voteR,index) => (
+				<VoteDetail
+				res_id={voteR.id}
+				id={id}
+				voteRes={voteR}/>	
+		))}
+		<button onClick={handleAccept}>Accept</button>
+		<button onClick={handleDecline}>Decline</button>
+
+		
 	</>
   );
 

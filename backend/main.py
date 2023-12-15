@@ -142,11 +142,11 @@ def handle_accept_vote(data):
     existing_vote_count = db.session.query(func.count(Vote_result.id)) \
     .filter_by(vote_id=vote_id, user_id=user_id).scalar()
 
-    print(existing_vote_count)
     if( existing_vote_count == 0 ):
         s = db.session.scalar(insert(Vote_result).returning(Vote_result),
                           [{'vote_id': vote_id, 'user_id': user_id, 'vote_state': vote_state}])
         
+        db.session.commit()
     else:
         db.session.connection().execute(
             update(Vote_result)
@@ -154,8 +154,8 @@ def handle_accept_vote(data):
             .values(vote_state=vote_state)
         )
         s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id and Vote_result.vote_id == vote_id))
+        db.session.commit()
 
-    db.session.commit()
     
     emit('voteRes', [resultToJsObj(s)], broadcast=True)
     return resultToJsObj(s)
