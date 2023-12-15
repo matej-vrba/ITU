@@ -5,6 +5,7 @@ import PlusIcon from './icons/Plus'
 import React from 'react';
 import {socket} from "./socket"
 import { ConnectionState } from './components/ConnectionState';
+import InlineEdit from './InlineEditComponent';
 
 export async function loader({ params }) {
   var hash = params.id;
@@ -92,32 +93,6 @@ function Projects({params}) {
   )
 
 
-  const handleInputChange = (e) => {
-    setNewProjectName(e.target.value);
-  };
-
-  const handleInputBlur = () => {
-    // Call your function to rename the project
-    // You may want to add additional validation here
-    // to ensure the new project name is not empty or the same as the current name
-
-    // Update state and reset editing mode
-    setProjectData((prevData) => ({ ...prevData, name: newProjectName }));
-    console.log("name "+newProjectName);
-    fetch('http://localhost:5000/project/' + id + '/name/'+newProjectName, { method: 'POST' });
-  };
-
-  const handleInputKeyPress = (e) => {
-    // If Enter key is pressed, call handleInputBlur
-    if (e.key === 'Enter') {
-      handleInputBlur();
-        // Blur the input to lose focus
-        inputRef.current.blur();
-    }
-  };
-
-
-
   // clicking new snippet only sends event to backend with projectId it
   // was requested from, if backend approves, it then sends new-snippet
   const navigate = useNavigate();
@@ -134,14 +109,6 @@ function Projects({params}) {
   // loading snippetId, which is specified in url (/project/id/snippetId)
   let { snippetId } = useParams();
   var [title, setTitle] = useState(snippets[snippetId-1]);
-  Projects.setTitle = setTitle;
-  setTitle = ()=>{};
-
-  useEffect(() => {
-    if( Projects.setTitle != undefined ){
-      Projects.setTitle(title);
-    }
-  }, [title]);
 
 
   const list = snippets.map(s =>
@@ -173,20 +140,8 @@ function Projects({params}) {
           <h2>Code2Gether</h2>
 
           <div className={`editable-project-name${
-              isHovered ? '-hover' : ''} ${isClicked ? '-clicked' : ''}`}
-              >
-            <input
-                type="text"
-                value={newProjectName}
-                onChange={handleInputChange}
-                onBlur={handleInputBlur}
-                onKeyDown={handleInputKeyPress}
-                ref={inputRef}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-                onMouseDown={() => setIsClicked(true)}
-                onMouseUp={() => setIsClicked(false)}
-              />
+              isHovered ? '-hover' : ''} ${isClicked ? '-clicked' : ''}`} >
+          <InlineEdit value={newProjectName} endpoint={`project/${id}/set-title`} setValue={setNewProjectName} id={id} listenEvent="project-title-changed" />
           </div>
 
 

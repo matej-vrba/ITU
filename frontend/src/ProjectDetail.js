@@ -10,6 +10,7 @@ import VoteComponent from "./VoteComponent";
 import CodeComponent from "./CodeComponent";
 import { createElement } from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
+import InlineEdit from './InlineEditComponent';
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -18,29 +19,6 @@ export async function loader({ params }) {
   //socket.timeout(5000).emit('get-snippet-title', id, () => {});
 
   return { id };
-}
-const InlineEdit = ({ value, setValue, titleId }) => {
-  const onChange = (event) => setValue(event.target.value);
-  const onKeyDown = (event) => {
-    if (event.key === "Enter" || event.key === "Escape") {
-      event.target.blur();
-    }
-  };
-
-  const onFocusLost = (event) => {
-    socket.timeout(5000).emit('update-snippet-title', titleId, event.target.value, () => {});
-  }
-
-  return (
-    <input
-      type="text"
-      aria-label="Field name"
-      value={value}
-      onChange={onChange}
-      onBlur={onFocusLost}
-      onKeyDown={onKeyDown}
-    />
-  )
 }
 
 function ProjectDetail({params}) {
@@ -91,7 +69,7 @@ const del = (e) => {
     <>
 
     <h3>
-      <InlineEdit value={title} setValue={setTitle} titleId={id} />
+      <InlineEdit value={title} setValue={setTitle} endpoint={`snippet/${id}/set-title`} listenEvent="snippet-title-changed" id={id} />
       <a title="Delete this snippet" onClick={del} href="/project">
         <TrashIcon />
       </a>

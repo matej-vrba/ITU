@@ -1,6 +1,6 @@
 from app import create_app, db
 from flask_socketio import SocketIO, emit, join_room, leave_room
-from flask import Blueprint,jsonify,redirect
+from flask import Blueprint,jsonify,redirect, request
 from flask_cors import CORS, cross_origin
 from app.models import Snippet,Message,Vote, Vote_result
 from sqlalchemy import select,insert,update,delete, and_
@@ -58,9 +58,10 @@ def add_snippet(projectId):
     return snippetToJsObj(s)
 
 @socketio.on('update-snippet-title')
-def upodate_title(snippet_id, title):
+@app.route("/snippet/<snippet_id>/set-title/", methods=["POST"], strict_slashes=False)
+def upodate_title(snippet_id):
     db.session.connection().execute(update(Snippet).where(Snippet.id == bindparam("s_id")),
-                                    [{"s_id": snippet_id, "title": title}])
+                                    [{"s_id": snippet_id, "title": request.json['value']}])
     db.session.connection().commit()
     #db.session.flush()
     #db.session.commit()
@@ -68,7 +69,11 @@ def upodate_title(snippet_id, title):
     s = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first()
     #db.session.commit()
 
-    emit('set-snippet-title', snippetToJsObj(s), broadcast=True)
+
+    socketio.emit('snippet-title-changed', {"value": request.json['value']});
+    socketio.emit('set-snippet-title', snippetToJsObj(s), broadcast=True)
+
+    return jsonify(value=request.json['value'])
 
 @app.route("/snippets/<snippet_id>", methods=["DELETE"], strict_slashes=False)
 @cross_origin()
@@ -292,6 +297,17 @@ def set_project_name(project_id,project_name):
     db.session.add(project)
     db.session.commit()
     return "set name: "+ project_name
+
+@app.route("/project/<project_id>/set-title/", methods=["POST"], strict_slashes=False)
+def set_project_title(project_id):
+
+    project = Project.query.filter_by(id=project_id).first()
+    project.name = request.json['value']
+    db.session.add(project)
+    db.session.commit()
+
+    socketio.emit('project-title-changed', {'value': request.json['value']}, to="{}".format(project_id))
+    return jsonify(value=request.json['value'])
 
 @socketio.on('send-message')
 def handle_send_message(data):
