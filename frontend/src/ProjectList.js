@@ -5,6 +5,7 @@ import {  useNavigate } from "react-router-dom";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import TrashIcon from './icons/Trash';
+import {progress} from "./progress"
 
 const ProjectList = () => {
     const user_id = useContext(UserContext);
@@ -38,7 +39,7 @@ const ProjectList = () => {
         <div className="project-list">
             <div className="project-icons">
                 {projects.map(project => (
-                <Link to={`/project/${project.hash}`} key={project.id} className="project-icon">
+                    <Link to={`/project/${project.hash}`} onClick={progress.start} key={project.id} className="project-icon">
                     <div className="project-overlay">
                         {/* <Link onClick={() => del(project.id)} className='trash-icon'><TrashIcon/></Link> */}
                         {project.role === 'creator' && (

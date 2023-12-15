@@ -9,6 +9,7 @@ import CreateButtom from './CreateButton';
 import ConnectionInput from './ConnectionInput';
 import { Outlet } from "react-router-dom";
 import { socket } from './socket';
+import {progress} from "./progress"
 import { ConnectionState } from './components/ConnectionState';
 import { UserContext } from '.';
 import ProjectList from './ProjectList';
@@ -28,6 +29,7 @@ function App({children}) {
     }
   )
 
+  progress.finish();
   return (
     <div className="App">
       <div className="main-container">

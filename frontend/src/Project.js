@@ -4,8 +4,10 @@ import { Outlet, NavLink, Link, useParams, useNavigate, useLoaderData } from "re
 import PlusIcon from './icons/Plus'
 import React from 'react';
 import {socket} from "./socket"
+import {progress} from "./progress"
 import { ConnectionState } from './components/ConnectionState';
 import InlineEdit from './InlineEditComponent';
+
 
 export async function loader({ params }) {
   var hash = params.id;
@@ -16,6 +18,7 @@ export async function loader({ params }) {
   const data = await response.json();
   actual_id = data;
 
+  progress.finish();
   socket.timeout(5000).emit('open-project', {projectId: actual_id.id});
   return {id:actual_id.id,hash:hash}
   // return { id };
@@ -119,6 +122,7 @@ function Projects({params}) {
               to={"/project/" + hash + '/' + s['id']}
               onClick={()=>{
                 setTitle(s['title']);
+                progress.start();
               }
                       }
         >

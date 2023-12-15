@@ -1,6 +1,7 @@
 import { useLoaderData } from "react-router-dom";
 import React, { useState,useEffect, useCallback  } from 'react';
 import {socket} from "./socket"
+import {progress} from "./progress"
 import { useCookies } from 'react-cookie';
 import { createElement } from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -31,6 +32,7 @@ export default function CodeComponent({children}){
     e.preventDefault()
     let code = event.target.elements.codeField.value;
     let lang = event.target.elements[0].value;
+    progress.start();
 
     socket.timeout(5000).emit('add-code',{
       snippetId: id,
@@ -45,6 +47,7 @@ export default function CodeComponent({children}){
         setCode(msg["code"])
         setLang(msg["lang"])
         console.log(msg)
+        progress.finish();
       });
     }, [code]
   )

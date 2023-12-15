@@ -1,4 +1,5 @@
 import {socket} from "./socket"
+import {progress} from "./progress"
 // Inline edit component
 
 // sends post request to endpoint with id and value, expects response to be json
@@ -17,6 +18,7 @@ export default function InlineEdit ({ value, setValue, endpoint, id, listenEvent
 
   const onFocusLost = (event) => {
     //socket.timeout(5000).emit(socketEvent, id, event.target.value, () => {});
+    progress.start();
     fetch('http://localhost:5000/' + endpoint,
           {
             method: 'POST',
@@ -29,6 +31,7 @@ export default function InlineEdit ({ value, setValue, endpoint, id, listenEvent
           })
       .then(response => response.json())
       .then(response => {
+        progress.finish();
         setValue(response['value'])
       })
   }

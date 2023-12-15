@@ -2,6 +2,7 @@ import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
 import React, { useState,useEffect, useCallback  } from 'react';
 import './Categories.css';
 import {socket} from "./socket"
+import {progress} from "./progress"
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import TrashIcon from './icons/Trash';
@@ -11,6 +12,7 @@ import CodeComponent from "./CodeComponent";
 import { createElement } from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
 import InlineEdit from './InlineEditComponent';
+
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -60,7 +62,7 @@ const del = (e) => {
     if(msg['id'] == id)
       navigate('/project/' + projectHash);
   })
-
+  progress.finish();
   return (
     <>
 
