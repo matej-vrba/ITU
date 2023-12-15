@@ -330,9 +330,12 @@ def handle_send_message(data):
 
 @socketio.on('add-code')
 def setCode(data):
+    lang = data["lang"]
+    if(lang == "" or lang is None):
+        lang = "c-like"
 
     db.session.connection().execute(update(Snippet).where(Snippet.id == bindparam("s_id")),
-                                    [{"s_id": data["snippetId"], "code": data["code"], "lang": data["lang"]}])
+                                    [{"s_id": data["snippetId"], "code": data["code"], "lang": lang}])
     db.session.connection().commit()
 
     s = db.session.scalars(select(Snippet).where(Snippet.id.is_(data["snippetId"]))).first()
