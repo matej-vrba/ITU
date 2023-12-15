@@ -7,7 +7,6 @@ import { createElement } from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
-import SelectSearch from 'react-select-search';
 import Select from 'react-select';
 
 export default function CodeComponent({children}){
