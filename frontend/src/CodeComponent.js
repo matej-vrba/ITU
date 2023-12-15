@@ -8,6 +8,7 @@ import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
 import SelectSearch from 'react-select-search';
+import Select from 'react-select';
 
 export default function CodeComponent({children}){
   const { id } = useLoaderData();
@@ -31,7 +32,7 @@ export default function CodeComponent({children}){
   var handleSubmit = (e)=>{
     e.preventDefault()
     let code = event.target.elements.codeField.value;
-    let lang = event.target.elements[0].value;
+    let lang = event.target.elements.lang.value;
     progress.start();
 
     socket.timeout(5000).emit('add-code',{
@@ -57,12 +58,13 @@ export default function CodeComponent({children}){
     <div className="code-wrapper">
       <form className="list" onSubmit={handleSubmit} action="set-code">
       <div className="code-line">
-        <SelectSearch
-          options={SyntaxHighlighter.supportedLanguages.map(s=>{return({"name": s, "value": s})})}
-          name="language"
-          placeholder="Choose snippet language"
-          search={true}
-        />
+        <Select name={"lang"}
+                className={"searchSelect"}
+                placeholder="Snippet language"
+                classNamePrefix="select"
+                unstyled={true}
+                options={SyntaxHighlighter.supportedLanguages.map(s=>{return({"label": s, "value": s})})}
+      />
       </div>
         <textarea name="codeField" cols="50" rows="10"></textarea>
         <input className="btn w-fit" name="" type="submit" value="Create"/>

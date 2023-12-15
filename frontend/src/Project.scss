@@ -52,7 +52,7 @@
 	.date{
 				margin-right: 1em;
 			}
-	*{
+	.lang, .date{
 				color: var(--bg);
 			}
 }
@@ -135,90 +135,3 @@ pre{
 	color: #7e103e;
 	border-radius: 3px;
   }
-
-  // adapted from react-select-search style.css
-
-/**
- * Main wrapper
- */
-.select-search-container {
-    width: 300px;
-    position: relative;
-    font-family: var(--select-search-font);
-    color: var(--select-search-text);
-    box-sizing: border-box;
-}
-
-.select-search-container *,
-.select-search-container *::after,
-.select-search-container *::before {
-    box-sizing: inherit;
-}
-
-.select-search-input {
-    position: relative;
-    z-index: 1;
-    display: block;
-    height: 1.6em;
-    width: 100%;
-    padding: 0 40px 0 16px;
-    background: var(--bg-alt);
-    color: var(--white);
-    outline: none;
-    font-family: var(--select-search-font);
-    font-size: 16px;
-    text-align: left;
-    text-overflow: ellipsis;
-    -webkit-appearance: none;
-    -webkit-font-smoothing: antialiased;
-}
-
-
-.select-search-select {
-    background: var(--bg-3);
-    box-shadow: 0 .0625rem .125rem rgba(0, 0, 0, 0.15);
-    overflow: auto;
-    max-height: 360px;
-}
-
-.select-search-container:not(.select-search-is-multiple) .select-search-select {
-    position: absolute;
-    z-index: 2;
-    top: 1.6em;
-    right: 0;
-    left: 0;
-    border-radius: 3px;
-    display: none;
-}
-
-.select-search-container:not(.select-search-is-multiple).select-search-has-focus .select-search-select {
-    display: block;
-}
-
-.select-search-options {
-    list-style: none;
-	padding: 0;
-	z-index: 200;
-}
-
-.select-search-option,
-.select-search-not-found {
-    display: block;
-    height: 42px;
-    width: 100%;
-    padding: 0 16px;
-    background: var(--select-search-background);
-    border: none;
-    outline: none;
-    color: var(--white);
-    font-size: 16px;
-    text-align: left;
-    letter-spacing: 0.01rem;
-    cursor: pointer;
-    -webkit-font-smoothing: antialiased;
-}
-
-.select-search-option:hover {
-    background: var(--bg-4);
-    color: var(--white);
-}

@@ -198,3 +198,33 @@ button, .btn{
 input, textarea, .select-search-input{
 	background: var(--bg-alt);
 }
+
+
+.searchSelect{
+  background: var(--bg-alt);
+  height: 1.6em;
+	width: 300px;
+	position: relative;
+	*{
+			color: var(--white);
+		}
+	.select__control{
+			height: 1.6em;
+			display: flex;
+			width: 100%;
+			min-height: 0;
+		}
+	.select__value-container{
+			padding-left: 0.17em;
+		}
+	.select__menu{
+			background: var(--bg-3);
+			&>.select__menu-list{
+				&>.select__option{
+					&:hover, &:active, &:focus {
+						background: var(--bg-4);
+					}
+				}
+			}
+		}
+}
