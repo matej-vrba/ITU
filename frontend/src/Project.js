@@ -1,5 +1,5 @@
 import './Project.scss';
-import { useState,useEffect,useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Outlet, NavLink, Link, useParams, useNavigate, useLoaderData } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
@@ -137,7 +137,8 @@ function Projects({params}) {
         <p>
         </p>
         <div className="sidebar">
-          <h2>Code2Gether</h2>
+          <h2><Link to="/">Code2Gether</Link></h2>
+
 
           <h4>
           <InlineEdit value={newProjectName} endpoint={`project/${id}/set-title`} setValue={setNewProjectName} id={id} listenEvent="project-title-changed" />
