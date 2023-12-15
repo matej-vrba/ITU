@@ -175,7 +175,7 @@ pre{
 
 
 .select-search-select {
-    background: var(--bg-alt);
+    background: var(--bg-3);
     box-shadow: 0 .0625rem .125rem rgba(0, 0, 0, 0.15);
     overflow: auto;
     max-height: 360px;
@@ -210,7 +210,6 @@ pre{
     background: var(--select-search-background);
     border: none;
     outline: none;
-    font-family: var(--select-search-font);
     color: var(--white);
     font-size: 16px;
     text-align: left;
@@ -219,8 +218,7 @@ pre{
     -webkit-font-smoothing: antialiased;
 }
 
-.select-search-is-highlighted,
-.select-search-option:not(.select-search-is-selected):hover {
-    background: var(--bg-3);
+.select-search-option:hover {
+    background: var(--bg-4);
     color: var(--white);
 }
