@@ -21,7 +21,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 def snippetToJsObj(s):
-    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y'), "code": s.code}
+    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y'), "code": s.code, "lang": s.lang}
 
 def messageToJsObj(s):
     return {'name': s.name, 'message': s.message}
@@ -332,7 +332,7 @@ def handle_send_message(data):
 def setCode(data):
 
     db.session.connection().execute(update(Snippet).where(Snippet.id == bindparam("s_id")),
-                                    [{"s_id": data["snippetId"], "code": data["code"]}])
+                                    [{"s_id": data["snippetId"], "code": data["code"], "lang": data["lang"]}])
     db.session.connection().commit()
 
     s = db.session.scalars(select(Snippet).where(Snippet.id.is_(data["snippetId"]))).first()

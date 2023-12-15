@@ -33,9 +33,6 @@ function ProjectDetail({params}) {
     }
   )
 
-  const [date, setDate] = useState([]);
-  const [code, setCode] = useState([]);
-
 
   useEffect(()=>{
     fetch('http://localhost:5000/snippets/' + id,{
@@ -43,8 +40,6 @@ function ProjectDetail({params}) {
     })
       .then(response => response.json())
       .then(response => {
-        setDate(response['created_at'])
-        setCode(response['code'])
         setTitle(response['title'])
       })
     .catch(error => console.log(error))
@@ -76,14 +71,8 @@ const del = (e) => {
       </a>
     </h3>
 
-    <div className="code-wrapper">
-      <div className="code-line">
-        <span className="lang">C</span>
-        <span className="date">{date}</span>
-      </div>
       <CodeComponent/>
-    </div>
-      <ChatComponent 
+      <ChatComponent
       id={id}/>
       <VoteComponent
       id={id}/>

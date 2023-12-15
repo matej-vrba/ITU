@@ -13,7 +13,7 @@ def hello_world():
 
 
 def snippetToJsObj(s):
-    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y'), "code": s.code}
+    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y'), "code": s.code, "lang": s.lang}
 
 @main_page.route("/snippets/<snippet_id>", methods=["GET"], strict_slashes=False)
 def getSnippets(snippet_id):

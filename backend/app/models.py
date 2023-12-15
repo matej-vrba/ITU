@@ -28,6 +28,7 @@ class Snippet(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(150))
     created_at = db.Column(db.Date())
+    lang: Mapped[str] = mapped_column(String(20), nullable=True)
     code = db.Column(db.UnicodeText())
     project_id: Mapped[int] = mapped_column(ForeignKey("projects.id"))
 

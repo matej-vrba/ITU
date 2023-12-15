@@ -98,7 +98,6 @@ button, .btn{
 	padding:  0.25em 0.7em;
 	border-radius: 0;
 	position: relative;
-  z-index: 3;
 
 	font-size: 0.85rem;
 	color: var(--bg);
@@ -190,4 +189,9 @@ button, .btn{
 	path{
 			stroke: var(--yellow);
 		}
+}
+
+input, textarea, .select-search-input{
+	background: var(--bg-alt);
+
 }

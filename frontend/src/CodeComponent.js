@@ -6,11 +6,13 @@ import { createElement } from 'react-syntax-highlighter';
 import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
-
+import SelectSearch from 'react-select-search';
 
 export default function CodeComponent(){
   const { id } = useLoaderData();
   const [code, setCode] = useState([]);
+  const [lang, setLang] = useState([]);
+  const [createdAt, setCreatedAt] = useState([]);
 
   useEffect(()=>{
     fetch('http://localhost:5000/snippets/' + id,{
@@ -19,6 +21,8 @@ export default function CodeComponent(){
       .then(response => response.json())
       .then(response => {
         setCode(response['code'])
+        setLang(response['lang'])
+        setCreatedAt(response['created_at'])
       })
     .catch(error => console.log(error))
   },[id])
@@ -26,12 +30,12 @@ export default function CodeComponent(){
   var handleSubmit = (e)=>{
     e.preventDefault()
     let code = event.target.elements.codeField.value;
-    console.log(code)
-    console.log(id)
+    let lang = event.target.elements[0].value;
 
     socket.timeout(5000).emit('add-code',{
       snippetId: id,
-      code: code
+      code: code,
+      lang: lang
     }, () => {});
   }
 
@@ -39,6 +43,7 @@ export default function CodeComponent(){
     () => {
       socket.on('snippet-set-code', function(msg) {
         setCode(msg["code"])
+        setLang(msg["lang"])
         console.log(msg)
       });
     }, [code]
@@ -46,13 +51,28 @@ export default function CodeComponent(){
   //TODO: lepsi nazev nez create
   if(code == null || code == "")
     return(
+    <div className="code-wrapper">
       <form className="list" onSubmit={handleSubmit} action="set-code">
+      <div className="code-line">
+        <SelectSearch
+          options={SyntaxHighlighter.supportedLanguages.map(s=>{return({"name": s, "value": s})})}
+          name="language"
+          placeholder="Choose snippet language"
+          search={true}
+        />
+      </div>
         <textarea name="codeField" cols="50" rows="10"></textarea>
         <input className="btn w-fit" name="" type="submit" value="Create"/>
       </form>
+    </div>
     )
   return(
 
+    <div className="code-wrapper">
+      <div className="code-line">
+        <span className="lang">{lang}</span>
+        <span className="date">{createdAt}</span>
+      </div>
         <SyntaxHighlighter
           wrapLines={true}
           showLineNumbers={true}
@@ -62,6 +82,7 @@ export default function CodeComponent(){
         >
           {code}
         </SyntaxHighlighter>
+    </div>
   )
 }
 
