@@ -69,9 +69,11 @@ def upodate_title(snippet_id):
     s = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first()
     #db.session.commit()
 
+    room_id = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first().project_id
 
     socketio.emit('snippet-title-changed', {"value": request.json['value']});
-    socketio.emit('set-snippet-title', snippetToJsObj(s), broadcast=True)
+    #socketio.emit('set-snippet-title', snippetToJsObj(s), broadcast=True)
+    socketio.emit('set-snippet-title', snippetToJsObj(s), to="{}".format(room_id))
 
     return jsonify(value=request.json['value'])
 
