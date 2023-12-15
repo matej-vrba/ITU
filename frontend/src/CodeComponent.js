@@ -46,9 +46,9 @@ export default function CodeComponent(){
   //TODO: lepsi nazev nez create
   if(code == null || code == "")
     return(
-      <form onSubmit={handleSubmit} action="set-code">
+      <form className="list" onSubmit={handleSubmit} action="set-code">
         <textarea name="codeField" cols="50" rows="10"></textarea>
-        <input className="btn" name="" type="submit" value="Create"/>
+        <input className="btn w-fit" name="" type="submit" value="Create"/>
       </form>
     )
   return(
