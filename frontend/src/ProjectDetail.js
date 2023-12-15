@@ -71,11 +71,10 @@ const del = (e) => {
       </a>
     </h3>
 
-      <CodeComponent/>
-      <ChatComponent
-      id={id}/>
-      <VoteComponent
-      id={id}/>
+      <CodeComponent>
+        <ChatComponent id={id}/>
+        <VoteComponent id={id}/>
+      </CodeComponent>
     </>
   )
 }

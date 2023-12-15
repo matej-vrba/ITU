@@ -8,7 +8,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
 import SelectSearch from 'react-select-search';
 
-export default function CodeComponent(){
+export default function CodeComponent({children}){
   const { id } = useLoaderData();
   const [code, setCode] = useState([]);
   const [lang, setLang] = useState([]);
@@ -68,6 +68,7 @@ export default function CodeComponent(){
     )
   return(
 
+    <>
     <div className="code-wrapper">
       <div className="code-line">
         <span className="lang">{lang}</span>
@@ -83,6 +84,8 @@ export default function CodeComponent(){
           {code}
         </SyntaxHighlighter>
     </div>
+      {children}
+    </>
   )
 }
 
