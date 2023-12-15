@@ -78,7 +78,7 @@ export default function CodeComponent({children}){
           wrapLines={true}
           showLineNumbers={true}
           renderer={renderer}
-          language="javascript"
+          language={lang}
           style={monokai}
         >
           {code}
