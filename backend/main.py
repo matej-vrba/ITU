@@ -20,7 +20,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 def snippetToJsObj(s):
-    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y')}
+    return {'id': s.id, 'title': s.title, 'created_at': s.created_at.strftime('%d.%m.%Y'), "code": s.code}
 
 def messageToJsObj(s):
     return {'name': s.name, 'message': s.message}
@@ -253,6 +253,37 @@ def set_project_name(project_id,project_name):
     db.session.add(project)
     db.session.commit()
     return "set name: "+ project_name
+
+@socketio.on('send-message')
+def handle_send_message(data):
+    name = data['name']
+    text = data['text']
+    snippet_id = data['snippetId']
+
+    # Save the message to the database
+    s = db.session.scalar(insert(Message).returning(Message),
+                           [{'name': name, "message": text,'snippet_id': snippet_id}])
+    db.session.commit()
+
+    # Fetch and broadcast all messages after inserting a new message
+    emit('messages', [messageToJsObj(s)] , broadcast=True)
+    return messageToJsObj(s)
+
+
+@socketio.on('add-code')
+def setCode(data):
+
+    db.session.connection().execute(update(Snippet).where(Snippet.id == bindparam("s_id")),
+                                    [{"s_id": data["snippetId"], "code": data["code"]}])
+    db.session.connection().commit()
+
+    s = db.session.scalars(select(Snippet).where(Snippet.id.is_(data["snippetId"]))).first()
+
+    room_id = db.session.scalars(select(Snippet).where(Snippet.id.is_(data["snippetId"]))).first().project_id
+
+    #emit('snippet-set-code', snippetToJsObj(s), broadcast=True, to="{}".format(room_id))
+    emit('snippet-set-code', snippetToJsObj(s), to="{}".format(room_id))
+
 
 
 

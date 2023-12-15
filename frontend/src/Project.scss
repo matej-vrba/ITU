@@ -58,9 +58,10 @@ pre{
 						justify-content: space-between;
 
 						&>span{
-								&>span:first-child{
+								&>span:nth-child(1){
 										border-right: 3px solid var(--gray);
 										margin-right: 0.2em;
+										width: 5ch;
 								}
 						}
 						&:hover{
@@ -68,6 +69,13 @@ pre{
 						}
 						& .add-comment{
 								display: none;
+										height: 100%;
+								button{
+										height: 100%;
+										width: 1.4em;
+										margin: 0;
+										padding: 0;
+								}
 						}
 						&:hover .add-comment{
 								display: inline;

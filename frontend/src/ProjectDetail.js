@@ -7,6 +7,7 @@ import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import TrashIcon from './icons/Trash';
 import ChatComponent from "./ChatComponent";
 import VoteComponent from "./VoteComponent";
+import CodeComponent from "./CodeComponent";
 import { createElement } from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
 
@@ -100,26 +101,7 @@ const del = (e) => {
         <span className="lang">C</span>
         <span className="date">{date}</span>
       </div>
-
-      {code ? (
-        <SyntaxHighlighter
-          preTag={<p>aa</p>}
-          wrapLines={true}
-          showLineNumbers={true}
-          renderer={renderer}
-          language="javascript"
-          style={monokai}
-        >
-          {code}
-        </SyntaxHighlighter>
-      ) : (
-        <input
-          type="text"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          placeholder="Enter code here"
-        />
-      )}
+      <CodeComponent/>
     </div>
       <ChatComponent 
       id={id}/>
@@ -129,39 +111,3 @@ const del = (e) => {
   )
 }
 export default ProjectDetail;
-
-function renderer({ rows, stylesheet, useInlineStyles }) {
-  const { id } = useLoaderData();
-
-  const submitComment = useCallback((lineNumber, e) => {
-    e.preventDefault();
-    console.log(event.target.elements.commentField.value)
-    console.log(id)
-    socket.timeout(5000).emit('add-comment',{
-      snippetId: id,
-      content: event.target.elements.commentField.value,
-      line: lineNumber+1
-    }, () => {});
-  }, [id]);
-
-  return rows.map((node, i) =>
-    <span>
-    {createElement({
-      node,
-      stylesheet,
-      useInlineStyles,
-      key: `code-segement${i}`
-    })}
-      <span className="add-comment">
-        <Popup trigger=
-                 {<button>+</button>}
-               position="left center">
-          <form onSubmit={(e) => submitComment(i, e)}>
-          <input name="commentField" className="commentField" type="text" />
-            <input className="btn" name="" type="submit" value="šabmit"/>
-          </form>
-        </Popup>
-      </span>
-    </span>
-  );
-}

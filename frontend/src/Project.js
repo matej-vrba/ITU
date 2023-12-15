@@ -147,7 +147,7 @@ function Projects({params}) {
   const list = snippets.map(s =>
     {
       return(
-        <NavLink draggable="false"
+        <NavLink key={s['id']} draggable="false"
               className="btn text-left"
               to={"/project/" + hash + '/' + s['id']}
               onClick={()=>{
