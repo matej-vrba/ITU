@@ -87,6 +87,7 @@ def deleteSnippet(snippet_id):
     db.session.connection().commit()
 
     c = db.session.scalars(select(Snippet).where(Snippet.project_id.is_(room_id))).all()
+    socketio.emit('snippet-deleted', {'id': snippet_id}, to="{}".format(room_id))
     socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))}, to="{}".format(room_id))
     return jsonify(message="Snippet deleted")
 

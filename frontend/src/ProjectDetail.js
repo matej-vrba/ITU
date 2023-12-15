@@ -14,16 +14,13 @@ import InlineEdit from './InlineEditComponent';
 
 export async function loader({ params }) {
   var id = params.snippetId;
-  console.log(params);
-
-  //socket.timeout(5000).emit('get-snippet-title', id, () => {});
-
-  return { id };
+  var projectHash = params.id;
+  return { projectHash, id };
 }
 
 function ProjectDetail({params}) {
-  const { id } = useLoaderData();
-  console.log(id);
+  const { projectHash, id } = useLoaderData();
+  console.log(projectHash);
   const [title, setTitle] = useState("An unknown snippet");
 
   useEffect(
@@ -59,11 +56,15 @@ const del = (e) => {
   e.preventDefault();
   fetch('http://localhost:5000/snippets/' + id, { method: 'DELETE' })
     .then(response => {
-      navigate('/project/' + 1);//TODO
+      navigate('/project/' + projectHash);
     }
     ) ;
   return false;
 }
+  socket.on('snippet-deleted', (msg)=>{
+    if(msg['id'] == id)
+      navigate('/project/' + projectHash);
+  })
 
   return (
     <>
