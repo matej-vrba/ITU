@@ -103,35 +103,3 @@ pre{
 				padding: 0.2em;
 		}
 }
-
-
-.editable-project-name {
-	position: relative;
-	display: inline-block;
-	width: 100%;
-  }
-  
-  .editable-project-name input {
-	width: 100%;
-	padding: 5px;
-	background: none;
-	font-size: 16px;
-	text-align: center;
-
-	color: #7e103e;
-	border: solid transparent;
-	border-radius: 3px;
-  }
-  
-  .editable-project-name-hover input {
-	width: 100%;
-	padding: 5px;
-	background: none;
-	font-size: 16px;
-	text-align: center;
-
-	border: solid;
-	border-color: #7e103e;
-	color: #7e103e;
-	border-radius: 3px;
-  }

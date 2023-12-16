@@ -21,6 +21,8 @@ class User(db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     created_projects: Mapped[List["Project"]] = relationship()
+    name: Mapped[str] = mapped_column(String(150),nullable=True)
+
 
 class Snippet(db.Model):
     __tablename__ = "snippets"

@@ -12,6 +12,7 @@ from app.models import User,Project,project_user
 import asyncio
 import secrets
 import string
+from random_username.generate import generate_username
 
 app = create_app()
 socketio = SocketIO(app, cors_allowed_origins="*", logger=True, engineio_logger=True, debug=True)
@@ -184,6 +185,8 @@ def handle_get_all_votes(snippet_id):
 @cross_origin()
 def create_user():
     user = User()
+    user_name = generate_username(1).pop()
+    user.name = user_name
     db.session.add(user)
     db.session.commit()
     #after commiting user.id is set to user
@@ -311,6 +314,22 @@ def set_project_title(project_id):
 
     socketio.emit('project-title-changed', {'value': request.json['value']}, to="{}".format(project_id))
     return jsonify(value=request.json['value'])
+
+@app.route("/user/<user_id>/set-name/", methods=["POST"], strict_slashes=False)
+def set_user_name(user_id):
+    user = User.query.filter_by(id=user_id).first()
+    user.name = request.json['value']
+    db.session.add(user)
+    db.session.commit()
+    socketio.emit('user-name-changed', {'value': request.json['value']}, to="{}".format(user_id))
+    return jsonify(value=request.json['value'])
+
+@app.route("/user/<user_id>/get-name/", methods=["GET"], strict_slashes=False)
+def get_user_name(user_id):
+
+    user = User.query.filter_by(id=user_id).first()
+    print("get:"+user.name+"user_id:"+user_id)
+    return jsonify(value=user.name)
 
 @socketio.on('send-message')
 def handle_send_message(data):

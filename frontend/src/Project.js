@@ -1,5 +1,5 @@
 import './Project.scss';
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import { Outlet, NavLink, Link, useParams, useNavigate, useLoaderData } from "react-router-dom";
 import PlusIcon from './icons/Plus'
 import React from 'react';
@@ -7,13 +7,12 @@ import {socket} from "./socket"
 import {progress} from "./progress"
 import { ConnectionState } from './components/ConnectionState';
 import InlineEdit from './InlineEditComponent';
+import { UserContext } from '.';
 
 
 export async function loader({ params }) {
   var hash = params.id;
-  console.log("hash"+hash);
   var actual_id = 0;
-  console.log("called"+hash);
   const response = await fetch(`http://localhost:5000/project/hash/${hash}`, { method: "GET" });
   const data = await response.json();
   actual_id = data;
@@ -25,12 +24,14 @@ export async function loader({ params }) {
 }
 
 function Projects({params}) {
+  const user_id = useContext(UserContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const { id,hash } = useLoaderData();
   // let { id } = useParams();
   // list of snippets for this project (displayed on the left)
   const [snippets, setSnippets] = useState([]);
 
+  const [userName, setUserName] = useState(null);
   const [projectData, setProjectData] = useState(null);
   const [newProjectName, setNewProjectName] = useState('');
   const [isHovered, setIsHovered] = useState(false);
@@ -54,7 +55,18 @@ function Projects({params}) {
         }
       };
 
+      const fetchUserName = async () => {
+        try {
+          const response = await fetch(`http://localhost:5000//user/${user_id}/get-name/`,{method:"GET"});
+          const data = await response.json();
+          setUserName(data.value);
+        } catch (error) {
+          console.error('Error fetching project data:', error);
+          // Handle errors as needed
+        }
+      };
       fetchData();
+      fetchUserName();
       
 
       // When socket gets disconnected, set state appropriately to
@@ -145,7 +157,7 @@ function Projects({params}) {
 
 
           <h4>
-          <InlineEdit value={newProjectName} endpoint={`project/${id}/set-title`} setValue={setNewProjectName} id={id} listenEvent="project-title-changed" />
+          <InlineEdit value={newProjectName} endpoint={`project/${id}/set-title`} setValue={setNewProjectName} id={id} listenEvent="project-title-changed" type='project_name' />
           </h4>
 
 
@@ -153,6 +165,10 @@ function Projects({params}) {
             <button onClick={addSnippet} >New <PlusIcon/></button>
             {list}
           </div>
+
+          <h4>
+            <InlineEdit value={userName} endpoint={`user/${user_id}/set-name`} setValue={setUserName} id={user_id} listenEvent="user-name-changed" type='user_name' />
+          </h4>
         </div>
         <div className="content">
           <Outlet/>
