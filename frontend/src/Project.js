@@ -35,14 +35,11 @@ function Projects({params}) {
   const [userName, setUserName] = useState(null);
   const [projectData, setProjectData] = useState(null);
   const [newProjectName, setNewProjectName] = useState('');
-  const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const inputRef = useRef(null);
 
 
   useEffect(
     () => {
-      console.log("effect");
+
       //fetches almost all project data and store it in "projectData"
       const fetchData = async () => {
         try {
@@ -68,8 +65,26 @@ function Projects({params}) {
       };
       fetchData();
       fetchUserName();
-      
 
+      const userUsesProject = async () => {
+        try {
+          fetch(`http://localhost:5000//project/${id}/user/${user_id}/connect`,{method:"POST"})
+          .then(response => response.json())
+          .then(responseData => {
+          if(responseData['connected'] == false){
+            console.log('user added to project failed');
+          }
+          else{
+            console.log('user added to project succesed');
+          }
+          })
+        } catch (error) {
+          console.error('Error fetching project data:', error);
+          // Handle errors as needed
+        }
+      };
+      
+    userUsesProject();
       // When socket gets disconnected, set state appropriately to
       // display or hide notice on top of the screen
       function onConn(){
