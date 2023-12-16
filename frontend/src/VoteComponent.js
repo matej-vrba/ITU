@@ -61,12 +61,14 @@ const VoteComponent = ({ id }) => {
 				{vote.code_line == null ?
 					<>
 					<p>{`Vote: ${vote.vote_title}`} <VoteResList
-						id={vote.id}/></p>
+						id={vote.id}
+						snippet_id={id}/></p>
 					</>
 					:
 					<>
 					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`} <VoteResList
-							id={vote.id}/></p>
+							id={vote.id}
+							snippet_id={id}/></p>
 					</>
 				}
 				

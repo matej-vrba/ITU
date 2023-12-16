@@ -23,7 +23,6 @@ export async function loader({ params }) {
 
 function ProjectDetail({params}) {
   const { projectHash, id } = useLoaderData();
-  console.log(projectHash);
   const [title, setTitle] = useState("An unknown snippet");
 
 
