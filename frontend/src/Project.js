@@ -8,6 +8,7 @@ import {progress} from "./progress"
 import { ConnectionState } from './components/ConnectionState';
 import InlineEdit from './InlineEditComponent';
 import { UserContext } from '.';
+import UserIcon from './icons/User';
 
 
 export async function loader({ params }) {
@@ -153,7 +154,10 @@ function Projects({params}) {
         <p>
         </p>
         <div className="sidebar">
-          <h2><Link to="/">Code2Gether</Link></h2>
+          <h2><Link to="/">
+            Code<span className="highlighted-number">2</span>Gether
+              </Link>
+          </h2>
 
 
           <h4>
@@ -166,9 +170,7 @@ function Projects({params}) {
             {list}
           </div>
 
-          <h4>
-            <InlineEdit value={userName} endpoint={`user/${user_id}/set-name`} setValue={setUserName} id={user_id} listenEvent="user-name-changed" type='user_name' />
-          </h4>
+          <InlineEdit value={userName} endpoint={`user/${user_id}/set-name`} setValue={setUserName} id={user_id} listenEvent="user-name-changed" type='user_name' />
         </div>
         <div className="content">
           <Outlet/>

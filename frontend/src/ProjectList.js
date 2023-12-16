@@ -53,7 +53,7 @@ const ProjectList = () => {
                                 wrapLines="false"
                                 language="javascript"
                                 style={monokai}
-                                showLineNumbers="true"
+                                showLineNumbers="false"
                                 >
                                 {project.code+'\n'.repeat(50)}
 

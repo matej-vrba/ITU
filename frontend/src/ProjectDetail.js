@@ -67,7 +67,7 @@ const del = (e) => {
     <>
 
     <h3>
-      <InlineEdit value={title} setValue={setTitle} endpoint={`snippet/${id}/set-title`} listenEvent="snippet-title-changed" id={id} />
+      <InlineEdit value={title} setValue={setTitle} endpoint={`snippet/${id}/set-title`} listenEvent="snippet-title-changed" id={id} type="project_name"/>
       <a title="Delete this snippet" onClick={del} href="/project">
         <TrashIcon />
       </a>

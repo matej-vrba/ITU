@@ -55,6 +55,7 @@
     margin: 10px;
     width: 200px; /* Adjust the width based on your design preference */
     height: 300px; /* Adjust the width based on your design preference */
+    box-shadow: 10px 10px 0px 0px var(--bg-4);
   }
 
   .project-icon:hover .project-name {
@@ -78,7 +79,9 @@
   .project-name {
     position: absolute;
     top: 0;
-    left: 10%;
+    // left: 10%;
+    left: 50%;  /* Set left to 50% */
+  transform: translateX(-50%); /* Center horizontally */
     padding: 5px;
     font-weight: bold;
     color: var(--cyan);

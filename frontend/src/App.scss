@@ -85,6 +85,27 @@ input.inline-edit{
   }
 }
 
+input.inline-edit-user{
+	width: 100%;
+	color: inherit;
+	background: unset;
+	border: none;
+	font-weight: 500;
+	padding-left: 0.17em;
+	border: 2px solid transparent;
+	&:hover{
+			background: var(--bg-3);
+			border: 2px solid var(--bg-4);
+		}
+	&:active{
+	  box-shadow: none;
+	  outline: none;
+  }
+  &:focus{
+			background: var(--bg-3);
+			outline: none;
+  }
+}
 
 .text-left{
 	text-align: start;
