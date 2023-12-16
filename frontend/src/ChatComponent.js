@@ -1,14 +1,19 @@
 import {socket} from "./socket"
 import React, { useState,useEffect  } from 'react';
 import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 const ChatComponent = ({ id }) => {
 	const [messages, setMessages] = useState([]);
+	const [userName, setUserName] = useState('');
+	const [cookies, setCookie] = useCookies(['user_id']);
+	let userId = cookies.user_id;
   
 	useEffect(() => {
 		// Fetch all messages for the given snippetId
 		fetchMessages();
-		
+		fetchName();
+
 		// Listen for new messages
 		socket.on('messages', (newMessages) => {
 			console.log("Received new message ", newMessages)
@@ -29,6 +34,18 @@ const ChatComponent = ({ id }) => {
 		  }
 	  };
 
+	  const fetchName = async () => {
+		try {
+		  const response = await fetch(`http://localhost:5000/user/${userId}/get-name/`);
+		  const newname = await response.json();
+		  console.log(newname.value);
+		  setUserName(newname.value);
+		} catch (error) {
+		  console.error('Error fetching name:', error);
+		}
+	  };
+	  
+
 	  const [newMessage, setNewMessage] = useState({ name: '', text: '' });
 
   
@@ -37,9 +54,9 @@ const ChatComponent = ({ id }) => {
 	};
   
 	const handleSendMessage = async () => {
-	  if (newMessage.name && newMessage.text) {
+	  if (newMessage.text) {
 		const messageData = {
-		  name: newMessage.name,
+		  name: userName,
 		  text: newMessage.text,
 		  snippetId: id,
 		};
@@ -49,6 +66,7 @@ const ChatComponent = ({ id }) => {
   
 		// Clear the input fields
 		setNewMessage({ name: '', text: '' });
+		fetchName();
 	  }
 	};
   
@@ -66,13 +84,7 @@ const ChatComponent = ({ id }) => {
 
 		<div className="hide-overflow">
 		  <div className="comment cut-corner">
-			<input
-			  type="text"
-			  name="name"
-			  placeholder="Your Name"
-			  value={newMessage.name}
-			  onChange={handleInputChange}
-			/>
+			
 			<textarea
 			  name="text"
 			  placeholder="Type your message..."

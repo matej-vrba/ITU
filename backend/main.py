@@ -37,7 +37,6 @@ def resultToJsObj(s):
 
 @socketio.on('open-project')
 def open_proj(data):
-    print(data);
     if(data['projectId'] is None):
         return
     print("join " + str(data['projectId']))
@@ -95,7 +94,6 @@ def deleteSnippet(snippet_id):
 @app.route("/get-all-messages/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_messages(snippet_id):
     # Retrieve all messages for the given snippet_id
-    print(snippet_id);
     messages = Message.query.filter_by(snippet_id=snippet_id).all()
     messages_data = [messageToJsObj(message) for message in messages]
     return jsonify(messages_data)
@@ -157,16 +155,19 @@ def handle_accept_vote(data):
         
         db.session.commit()
     else:
-        db.session.connection().execute(
+        s = db.session.connection().execute(
             update(Vote_result)
             .where(and_(Vote_result.user_id == user_id, Vote_result.vote_id == vote_id))
             .values(vote_state=vote_state)
         )
-        s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id and Vote_result.vote_id == vote_id))
-        db.session.commit()
+        db.session.connection().commit()
+
+        s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id).where(Vote_result.vote_id == vote_id))
 
     
-    emit('voteRes', [resultToJsObj(s)], broadcast=True)
+    emit('voteRes', resultToJsObj(s), broadcast=True)
+    return resultToJsObj(s)
+
 
 @app.route("/get-all-results/<vote_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_results(vote_id):
@@ -180,7 +181,18 @@ def handle_get_all_votes(snippet_id):
     #user = User.query.filer_by(id=data['userId']).all()
     votes_data = [voteToJsObj(vote) for vote in votes]
     return jsonify(votes_data)
-    
+
+@app.route("/get-users/<user_id>", methods=["GET"], strict_slashes=False)
+def get_user_project_count(user_id):
+    project_count = (
+        db.session.query(func.count())
+        .select_from(project_user)
+        .filter(project_user.c.user_id == user_id)
+        .scalar()
+    )
+
+    return jsonify({"project_count": project_count})
+
 @app.route("/create-user", methods=["POST"], strict_slashes=False)
 @cross_origin()
 def create_user():
@@ -328,7 +340,6 @@ def set_user_name(user_id):
 def get_user_name(user_id):
 
     user = User.query.filter_by(id=user_id).first()
-    print("get:"+user.name+"user_id:"+user_id)
     return jsonify(value=user.name)
 
 @socketio.on('send-message')

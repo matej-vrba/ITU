@@ -1,7 +1,6 @@
 import {socket} from "./socket"
 import { useCookies } from 'react-cookie';
 import React, { useState,useEffect  } from 'react';
-import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
 import VoteResList from './VoteResList';
 
 const VoteComponent = ({ id }) => {
