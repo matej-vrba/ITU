@@ -3,7 +3,7 @@ import { socket } from "./socket";
 import { useCookies } from 'react-cookie';
 import VoteDetail from './VoteDetail';
 
-const VoteResList = ({ id }) => {
+const VoteResList = ({ id, snippet_id  }) => {
   const [voteRes, setVoteRes] = useState([]);
   const [voteCount, setVoteCount] = useState(0);
   const [userCount, setUserCount] = useState(0);
@@ -36,7 +36,8 @@ const VoteResList = ({ id }) => {
 
   const fetchUsersCount = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/get-users/${userId}`);
+      console.log(snippet_id);
+      const response = await fetch(`http://localhost:5000/get-users/snippet/${snippet_id}`);
       const data = await response.json();
       console.log(data.project_count);
       setUserCount(data.project_count);
