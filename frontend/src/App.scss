@@ -86,7 +86,9 @@ input.inline-edit{
 }
 
 input.inline-edit-user{
-	width: 100%;
+	position: relative;
+	left: 1em;
+	width: 70%;
 	color: inherit;
 	background: unset;
 	border: none;
@@ -105,6 +107,17 @@ input.inline-edit-user{
 			background: var(--bg-3);
 			outline: none;
   }
+}
+
+.zmrd-div{
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	height: 3em;
+}
+.userIcon{
+	position: relative;
+	left: 1em;
 }
 
 .text-left{
@@ -195,6 +208,7 @@ button, .btn{
 	.sidebar{
 		background: var(--bg-alt);
 		flex: 1;
+		position: relative;
 	}
 }
 
