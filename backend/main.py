@@ -262,21 +262,40 @@ def get_projects(user_id):
         if user in project.users:
             collab_projects.append(project)
     projects_json = []
-    #TODO project name
+    codes = []
+    for project in projects:
+        code = ""
+        if project.children != []:
+            code = project.children[0].code
+        else:
+            code = ""
+        if code == None:
+            code = ""
+        codes.append(code)
+    owned_codes = []
+    for project in owned_projects:
+        code = ""
+        if project.children != []:
+            code = project.children[0].code
+        else:
+            code = ""
+        if code == None:
+            code = ""
+        owned_codes.append(code)
     [projects_json.append({"id" : project.id,
-                           "name" : "todo",
+                           "name" : project.name,
                            "created" : project.created_at,
                            "hash" : project.connection_string,
                            "role" : "creator",
-                           "code":project.children[0].code if project.children != [] else "empty",}
-                           ) for project in owned_projects]
+                           "code": owned_codes[i]}
+                           ) for i,project in enumerate(owned_projects)]
     [projects_json.append({"id" : project.id,
-                        "name" : "todo",
+                        "name" : project.name,
                         "created" : project.created_at,
                         "hash" : project.connection_string,
                         "role" : "collab",
-                        "code":project.children[0].code if project.children != [] else "empty",}
-                        ) for project in collab_projects]
+                        "code":codes[i]}
+                        ) for i,project in enumerate(collab_projects)]
 
     return jsonify(projects_json)
 

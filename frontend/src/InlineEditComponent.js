@@ -8,7 +8,7 @@ import {progress} from "./progress"
 // The purpoise of this is when other user uses inline edit, backend server should
 // upon submitting send websocket notification about this and other clients should
 // update their value accordingly
-export default function InlineEdit ({ value, setValue, endpoint, id, listenEvent }) {
+export default function InlineEdit ({ value, setValue, endpoint, id, listenEvent , type }) {
   const onChange = (event) => setValue(event.target.value);
   const onKeyDown = (event) => {
     if (event.key === "Enter" || event.key === "Escape") {
@@ -40,9 +40,11 @@ export default function InlineEdit ({ value, setValue, endpoint, id, listenEvent
       setValue(msg['value']);
     })
 
+  const className = type == 'project_name' ? 'inline-edit' : 'inline-edit-user';
+  
   return (
     <input
-      className="inline-edit"
+      className={className}
       type="text"
       aria-label="Field name"
       value={value}
