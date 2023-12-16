@@ -13,7 +13,7 @@ import { createElement } from 'react-syntax-highlighter';
 import Popup from 'reactjs-popup';
 import InlineEdit from './InlineEditComponent';
 import UserAddIcon from './icons/UserAdd';
-import PopUpComponent from './PopUpComponent';
+import DropDownMenu from './DropDownMenu';
 
 export async function loader({ params }) {
   var id = params.snippetId;
@@ -25,7 +25,7 @@ function ProjectDetail({params}) {
   const { projectHash, id } = useLoaderData();
   console.log(projectHash);
   const [title, setTitle] = useState("An unknown snippet");
-  const [isPopUpOpen, setPopUpOpen] = useState(false);
+
 
   useEffect(
     () => {
@@ -36,20 +36,6 @@ function ProjectDetail({params}) {
       });
     }
   )
-
-  const handleIconClick = () => {
-    setPopUpOpen(true);
-  };
-
-  const handleClosePopUp = () => {
-    setPopUpOpen(false);
-  };
-
-  const handleCopyToClipboard = (option) => {
-    // Implement copy-to-clipboard logic here
-    // You can use document.execCommand('copy') or the Clipboard API
-    console.log(`Copying ${option} to clipboard`);
-  };
 
 
   useEffect(()=>{
@@ -84,12 +70,9 @@ const del = (e) => {
 
     <h3>
       <InlineEdit value={title} setValue={setTitle} endpoint={`snippet/${id}/set-title`} listenEvent="snippet-title-changed" id={id} type="project_name"/>
-      <div>
-        <UserAddIcon onClick={handleIconClick}/>
-        {isPopUpOpen && (
-          <PopUpComponent onClose={handleClosePopUp} onCopy={handleCopyToClipboard} />
-        )}
-      </div>
+
+      <DropDownMenu hash={projectHash}/>
+
       <a title="Delete this snippet" onClick={del} href="/project">
         <TrashIcon />
       </a>
