@@ -145,6 +145,9 @@ def handle_accept_vote(data):
     vote_id = data['vote_id']
     user_id = data['user_id']
     vote_state = data['status']
+
+    #jakmile budu mit ten count tak jen udelat count kolik je votes a potom se udela delete, toto musi byt na konci teto funkce
+    
     
     existing_vote_count = db.session.query(func.count(Vote_result.id)) \
     .filter_by(vote_id=vote_id, user_id=user_id).scalar()
@@ -182,16 +185,20 @@ def handle_get_all_votes(snippet_id):
     votes_data = [voteToJsObj(vote) for vote in votes]
     return jsonify(votes_data)
 
-@app.route("/get-users/<user_id>", methods=["GET"], strict_slashes=False)
-def get_user_project_count(user_id):
-    project_count = (
+@app.route("/get-users/snippet/<snippet_id>", methods=["GET"], strict_slashes=False)
+def get_user_snippet_count(snippet_id):
+    # Query the count of users for a given snippet
+    user_count = (
         db.session.query(func.count())
         .select_from(project_user)
-        .filter(project_user.c.user_id == user_id)
+        .join(User)
+        .join(Project)
+        .join(Snippet)
+        .filter(Snippet.id == snippet_id)
         .scalar()
     )
 
-    return jsonify({"project_count": project_count})
+    return jsonify({"user_count": user_count})
 
 @app.route("/create-user", methods=["POST"], strict_slashes=False)
 @cross_origin()
