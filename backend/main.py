@@ -404,3 +404,12 @@ def project_id_from_hash(hash):
     project = Project.query.filter_by(connection_string=hash).first()
     return jsonify(id=project.id)
 
+
+@app.route("/snippet/<snippet_id>/user_count", methods=["GET"], strict_slashes=False)
+@cross_origin()
+def users_in_project(snippet_id):
+
+    snippet = Snippet.query.filter_by(id=snippet_id).first()
+    project = Project.query.filter_by(id=snippet.project_id).first()
+    #project.user je list userů  + 1 vlastník
+    return jsonify(count=len(project.users) + 1)
