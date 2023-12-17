@@ -41,7 +41,7 @@ class Project(db.Model):
     created_at = db.Column(db.Date())
     name: Mapped[str] = mapped_column(String(150),nullable=True)  
     connection_string: Mapped[str] = mapped_column(String(150),nullable=True,unique=True)
-    children: Mapped[List["Snippet"]] = relationship()
+    children: Mapped[List["Snippet"]] = relationship(cascade="all, delete-orphan")
     creator: Mapped[int] = mapped_column(ForeignKey("user.id"))
     users: Mapped[List[User]] = relationship(secondary=project_user)
 
