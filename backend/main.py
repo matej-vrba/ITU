@@ -188,8 +188,7 @@ def handle_accept_vote(data):
 
         s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id).where(Vote_result.vote_id == vote_id))
 
-    #Pokud je pocet votes stejny jako pocet useru v projektu a vsechny jsou accepted tak se presune updatne v DB
-    #Pokud jsou vsechny declined tak se smaze z DB
+    #Pokud jsou vsechny declined tak se nastavi na aktivita na false
 
     vote_q = Vote.query.filter_by(id=vote_id).first()
     snippet = Snippet.query.filter_by(id=vote_q.snippet_id).first()
@@ -202,19 +201,12 @@ def handle_accept_vote(data):
         all_states_false = all(vote_result.vote_state == False for vote_result in vote_results)
         all_states_true = all(vote_result.vote_state == True for vote_result in vote_results)
         if( all_states_false ):
-            vote_res = Vote_result.query.filter_by(vote_id=vote_id).all()
-            vote = Vote.query.filter_by(id=vote_id).first()
-            for vote_result in vote_results:
-                db.session.delete(vote_result)
-            db.session.delete(vote)
+            db.session.connection().execute(update(Vote).where(Vote.id == bindparam("v_id")),
+                                    [{"v_id": vote_id, 'active': False}])
             db.session.connection().commit()
             emit('delete-vote', vote_id, broadcast=True)
 
-        if( all_states_true ):
-            vote = Vote.query.filter_by(id=vote_id).first()
-            vote.active = False
-            db.session.connection().commit()
-    
+
     emit('voteRes', resultToJsObj(s), broadcast=True)
     return resultToJsObj(s)
 
@@ -239,16 +231,15 @@ def handle_get_all_votes(snippet_id):
     votes_data = [voteToJsObj(vote) for vote in votes]
     return jsonify(votes_data)
 
-#   Funkce při mountu navrátí všechny hlasování v DB, které jsou odhlasovány
 #   
 #   Autor: Martin Soukup
 #   Login: xsouku15
-@app.route("/get-accepted-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
-def handle_get_accepted_votes(snippet_id):
-    votes = Vote.query.filter_by(snippet_id=snippet_id, active=False).all()
-    #user = User.query.filer_by(id=data['userId']).all()
-    votes_data = [voteToJsObj(vote) for vote in votes]
-    return jsonify(votes_data)
+#@app.route("/get-accepted-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
+#def handle_get_accepted_votes(snippet_id):
+#    votes = Vote.query.filter_by(snippet_id=snippet_id, active=False).all()
+#    #user = User.query.filer_by(id=data['userId']).all()
+#    votes_data = [voteToJsObj(vote) for vote in votes]
+#    return jsonify(votes_data)
 
 @app.route("/create-user", methods=["POST"], strict_slashes=False)
 @cross_origin()
