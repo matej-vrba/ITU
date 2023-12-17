@@ -20,15 +20,19 @@ const VoteComponent = ({ id }) => {
 		
 		// Fetch all messages for the given snippetId
 		fetchVotes();
-		fetchAVotes();
+		//fetchAVotes();
 		
 		// Listen for new votes
 		socket.on('votes', (newVotes) => {
+			console.log("DOSTAL JSEM: ", newVotes)
+
 			setVotes((votes) => [...votes, ...newVotes]);
 		  });
 
 		socket.on('acc-votes', (newAVotes) => {
-			setAcceptedVotes((acceptedVotes) => [...acceptedVotes, ...newAVotes]);
+			console.log("DOSTAL JSEM: ", newAVotes)
+			setVotes((votes) => votes.filter((vote) => vote.id !== newAVotes));
+			fetchAVotes();
 		});
 
 		socket.on('delete-vote', (deletedVoteId) => {
@@ -48,6 +52,7 @@ const VoteComponent = ({ id }) => {
 		try {
 			const response = await fetch(`http://localhost:5000/get-all-votes/${id}`);
 			const data = await response.json();
+			console.log(data);
 			setVotes(data);
 		} catch (error) {
 			console.error('Error fetching votes:', error);
@@ -57,6 +62,7 @@ const VoteComponent = ({ id }) => {
 		try {
 			const response = await fetch(`http://localhost:5000/get-accepted-votes/${id}`);
 			const data = await response.json();
+			console.log(data);
 			setAcceptedVotes(data);
 		} catch (error) {
 			console.error('Error fetching votes:', error);
@@ -77,7 +83,7 @@ const VoteComponent = ({ id }) => {
 		  socket.emit('start-vote', voteData);
 	
 		  // Clear the input fields
-		  setNewVote({ vote: '' });
+		  setNewVote({ message: '' });
 
 		}
 	  };
@@ -111,7 +117,7 @@ const VoteComponent = ({ id }) => {
 			<button onClick={handleVote}>Start Vote</button>
 			</div>
 		</div>
-		{acceptedVotes &&
+		{acceptedVotes.length > 0 &&
 		<div className="votes-section">
 			<h2>Accepted Votes</h2>
 			{acceptedVotes.map((acceptedVote, index) => (
