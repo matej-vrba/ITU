@@ -1,7 +1,14 @@
+/**
+*   Author: Martin Soukup
+*   Login: xsouku15
+*
+*
+*/
 import {socket} from "./socket"
 import React, { useState,useEffect  } from 'react';
 import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
 import { useCookies } from 'react-cookie';
+import './ChatComponent.css';
 
 const ChatComponent = ({ id }) => {
 	const [messages, setMessages] = useState([]);

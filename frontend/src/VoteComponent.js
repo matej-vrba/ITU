@@ -1,10 +1,18 @@
+/**
+*   Author: Martin Soukup
+*   Login: xsouku15
+*
+*
+*/
 import {socket} from "./socket"
 import { useCookies } from 'react-cookie';
 import React, { useState,useEffect  } from 'react';
 import VoteResList from './VoteResList';
+import './VoteComponent.css';
 
 const VoteComponent = ({ id }) => {
 	const [votes, setVotes] = useState([]);
+	const [acceptedVotes, setAcceptedVotes] = useState([]);
 	const [cookies, setCookie] = useCookies(['user_id']);
 	let userId = cookies.user_id;
 
@@ -12,12 +20,27 @@ const VoteComponent = ({ id }) => {
 		
 		// Fetch all messages for the given snippetId
 		fetchVotes();
+		fetchAVotes();
 		
 		// Listen for new votes
 		socket.on('votes', (newVotes) => {
 			setVotes((votes) => [...votes, ...newVotes]);
 		  });
-		  
+
+		socket.on('acc-votes', (newAVotes) => {
+			setAcceptedVotes((acceptedVotes) => [...acceptedVotes, ...newAVotes]);
+		});
+
+		socket.on('delete-vote', (deletedVoteId) => {
+			setVotes((votes) => votes.filter((vote) => vote.id !== deletedVoteId));
+			setAcceptedVotes((votes) => votes.filter((vote) => vote.id !== deletedVoteId));
+		  });
+
+		return () => {
+			socket.off('votes')
+			socket.off('acc-votes')
+			socket.off('delete-vote')
+			};
 		
 	  }, [id, socket]);
 	  
@@ -25,8 +48,16 @@ const VoteComponent = ({ id }) => {
 		try {
 			const response = await fetch(`http://localhost:5000/get-all-votes/${id}`);
 			const data = await response.json();
-			console.log(data);
 			setVotes(data);
+		} catch (error) {
+			console.error('Error fetching votes:', error);
+		}
+	  };
+	  const fetchAVotes = async () => {
+		try {
+			const response = await fetch(`http://localhost:5000/get-accepted-votes/${id}`);
+			const data = await response.json();
+			setAcceptedVotes(data);
 		} catch (error) {
 			console.error('Error fetching votes:', error);
 		}
@@ -53,26 +84,21 @@ const VoteComponent = ({ id }) => {
 
 
 	return (
-
 		<div className="votes">
+		<div className="votes-section">
 			<h2>Active Votes</h2>
-				{votes.map((vote, index) => (
-				<div key={index} className="vote-row">
-				{vote.code_line == null ?
-					<>
-					<p>{`Vote: ${vote.vote_title}`} <VoteResList
-						id={vote.id}
-						snippet_id={id}/></p>
-					</>
-					:
-					<>
-					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`} <VoteResList
-							id={vote.id}
-							snippet_id={id}/></p>
-					</>
-				}
-				
-				</div>
+			{votes.map((vote, index) => (
+			<div key={index} className="vote-row">
+				{vote.code_line == null ? (
+				<>
+					<p>{`Vote: ${vote.vote_title}`} <VoteResList id={vote.id} snippet_id={id} /></p>
+				</>
+				) : (
+				<>
+					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`} <VoteResList id={vote.id} snippet_id={id} /></p>
+				</>
+				)}
+			</div>
 			))}
 			<div className="vote-input">
 			<input
@@ -85,8 +111,17 @@ const VoteComponent = ({ id }) => {
 			<button onClick={handleVote}>Start Vote</button>
 			</div>
 		</div>
-
-
+		{acceptedVotes.length > 0 &&
+		<div className="votes-section">
+			<h2>Accepted Votes</h2>
+			{acceptedVotes.map((acceptedVote, index) => (
+			<div key={index} className="vote-row">
+				<p>{`Accepted Vote: ${acceptedVote.vote_title}`} </p>
+			</div>
+			))}
+		</div>
+		}
+		</div>
 	);
 };
 

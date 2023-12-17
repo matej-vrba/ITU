@@ -1,10 +1,14 @@
+/**
+*   Author: Martin Soukup
+*   Login: xsouku15
+*
+*
+*/
 import React from 'react';
 import { socket } from "./socket";
 import { useCookies } from 'react-cookie';
 
-const VoteDetail = ({ res_id, id, voteRes  }) => {
-  const [cookies] = useCookies(['user_id']);
-  let userId = cookies.user_id;
+const VoteDetail = ({ voteRes  }) => {
 
   return (
     <>

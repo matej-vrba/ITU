@@ -1,3 +1,9 @@
+/**
+*   Author: Martin Soukup
+*   Login: xsouku15
+*
+*
+*/
 import React, { useState, useEffect } from 'react';
 import { socket } from "./socket";
 import { useCookies } from 'react-cookie';
@@ -15,13 +21,19 @@ const VoteResList = ({ id, snippet_id  }) => {
     fetchResult();
     fetchUsersCount();
 
-    socket.on('voteRes', (newResults) => {
-	  setVoteRes((voteRes) =>
-      voteRes.map((vote) => (vote.id === newResults.id ? newResults : vote))
-    );
-    updateVoteCount(voteRes, newResults);   
-  });
-    
+    const handleVoteRes = (newResults) => {
+      setVoteRes((voteRes) =>
+        voteRes.map((vote) => (vote.id === newResults.id ? newResults : vote))
+      );
+      updateVoteCount(voteRes, newResults);   
+    };
+  
+    socket.on('voteRes', handleVoteRes);
+  
+    return () => {
+      // Clean up the socket event listener when the component is unmounted
+      socket.off('voteRes', handleVoteRes);
+    };
   }, [id, socket]);
 
   const fetchResult = async () => {
@@ -37,10 +49,10 @@ const VoteResList = ({ id, snippet_id  }) => {
   const fetchUsersCount = async () => {
     try {
       console.log(snippet_id);
-      const response = await fetch(`http://localhost:5000/get-users/snippet/${snippet_id}`);
+      const response = await fetch(`http://localhost:5000/snippet/${snippet_id}/user_count`);
       const data = await response.json();
-      console.log(data.project_count);
-      setUserCount(data.project_count);
+      console.log(data.count);
+      setUserCount(data.count);
     } catch (error) {
       console.error('Error fetching voting results', error);
     }
@@ -79,16 +91,13 @@ const VoteResList = ({ id, snippet_id  }) => {
 	<>
 		{voteRes.map((voteR, index) => (
     <div key={index}>
-      <VoteDetail res_id={voteR.id} id={id} voteRes={voteR} />
+      <VoteDetail voteRes={voteR} />
       <p>{`Votes: ${voteRes.length} / Total Users: ${userCount}`}</p>
     </div>
   ))}
 		<button onClick={handleAccept}>Accept</button>
 		<button onClick={handleDecline}>Decline</button>
 
-
-
-		
 	</>
   );
 

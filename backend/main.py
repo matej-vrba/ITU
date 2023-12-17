@@ -141,13 +141,14 @@ def handle_new_vote(data):
     return voteToJsObj(s)
 
 @socketio.on('accept-vote')
+@cross_origin()
 def handle_accept_vote(data):
     vote_id = data['vote_id']
     user_id = data['user_id']
     vote_state = data['status']
 
     #jakmile budu mit ten count tak jen udelat count kolik je votes a potom se udela delete, toto musi byt na konci teto funkce
-    
+
     
     existing_vote_count = db.session.query(func.count(Vote_result.id)) \
     .filter_by(vote_id=vote_id, user_id=user_id).scalar()
@@ -167,6 +168,33 @@ def handle_accept_vote(data):
 
         s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id).where(Vote_result.vote_id == vote_id))
 
+    #Pokud je pocet votu stejny jako pocet useru v projektu a vsechny jsou accepted tak se presune do accepted
+    #Musim prohodit tyto dve veci tu nahore a tu dole
+
+    vote_q = Vote.query.filter_by(id=vote_id).first()
+    snippet = Snippet.query.filter_by(id=vote_q.snippet_id).first()
+    project = Project.query.filter_by(id=snippet.project_id).first()
+    count=len(project.users) + 1
+
+    vote_res_count = Vote_result.query.filter_by(vote_id=vote_id).count()
+    vote_results = Vote_result.query.filter_by(vote_id=vote_id).all()
+    if(count == vote_res_count):
+        all_states_false = all(vote_result.vote_state == False for vote_result in vote_results)
+        all_states_true = all(vote_result.vote_state == True for vote_result in vote_results)
+        if( all_states_false ):
+            vote_res = Vote_result.query.filter_by(vote_id=vote_id).all()
+            vote = Vote.query.filter_by(id=vote_id).first()
+            for vote_result in vote_results:
+                db.session.delete(vote_result)
+            db.session.delete(vote)
+            db.session.connection().commit()
+            emit('delete-vote', vote_id, broadcast=True)
+            return resultToJsObj(s)
+
+        if( all_states_true ):
+            vote = Vote.query.filter_by(id=vote_id).first()
+            vote.active = False
+            db.session.connection().commit()
     
     emit('voteRes', resultToJsObj(s), broadcast=True)
     return resultToJsObj(s)
@@ -180,7 +208,14 @@ def handle_get_all_results(vote_id):
        
 @app.route("/get-all-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_votes(snippet_id):
-    votes = Vote.query.filter_by(snippet_id=snippet_id).all()
+    votes = Vote.query.filter_by(snippet_id=snippet_id, active=True).all()
+    #user = User.query.filer_by(id=data['userId']).all()
+    votes_data = [voteToJsObj(vote) for vote in votes]
+    return jsonify(votes_data)
+
+@app.route("/get-accepted-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
+def handle_get_accepted_votes(snippet_id):
+    votes = Vote.query.filter_by(snippet_id=snippet_id, active=False).all()
     #user = User.query.filer_by(id=data['userId']).all()
     votes_data = [voteToJsObj(vote) for vote in votes]
     return jsonify(votes_data)
@@ -366,6 +401,9 @@ def set_user_name(user_id):
 def get_user_name(user_id):
 
     user = User.query.filter_by(id=user_id).first()
+    if(user == None):
+        return jsonify(value="Anonymous")
+        
     return jsonify(value=user.name)
 
 @socketio.on('send-message')
@@ -400,8 +438,6 @@ def setCode(data):
 
     #emit('snippet-set-code', snippetToJsObj(s), broadcast=True, to="{}".format(room_id))
     emit('snippet-set-code', snippetToJsObj(s), to="{}".format(room_id))
-
-
 
 
 @app.route("/project/hash/<hash>/", methods=["GET"], strict_slashes=False)
