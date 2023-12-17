@@ -191,7 +191,7 @@ function Projects({params}) {
             <button onClick={addSnippet} >New <PlusIcon/></button>
             {list}
           </div>
-          <div className='zmrd-div'> 
+          <div className='user-div'> 
             <UserIcon className="userIcon"/>
             <InlineEdit value={userName} endpoint={`user/${user_id}/set-name`} setValue={setUserName} id={user_id} listenEvent="user-name-changed" type='user_name' />
           </div>
