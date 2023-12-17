@@ -1,5 +1,4 @@
 // author Matěj Vrba xvrbam04
-// author Ondřej Bahunek xbahou00
 
 
 import {socket} from "./socket"
@@ -44,6 +43,8 @@ export default function InlineEdit ({ value, setValue, endpoint, id, listenEvent
       setValue(msg['value']);
     })
 
+  // author Ondřej Bahunek xbahou00
+  // selects correct css class based on passed type
   const className = type == 'project_name' ? 'inline-edit' : 'inline-edit-user';
   
   return (

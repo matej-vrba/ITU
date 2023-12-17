@@ -1,3 +1,4 @@
+// Author: xvrbam03
 import './Project.scss';
 import { useState, useEffect, useRef, useContext } from 'react'
 import { Outlet, NavLink, Link, useParams, useNavigate, useLoaderData } from "react-router-dom";

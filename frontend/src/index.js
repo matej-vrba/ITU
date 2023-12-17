@@ -1,3 +1,4 @@
+// Author: xvrbam03
 import React from 'react';
 import { useState,useEffect  } from 'react'
 import ReactDOM from 'react-dom';
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
   },
 ]);
 
+// author Ondřej Bahunek xbahou00
 ReactDOM.render(
   <React.StrictMode>
     <CookiesProvider>

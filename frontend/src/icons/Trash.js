@@ -1,5 +1,4 @@
-
-
+// Author: xvrbam03
 export default function TrashIcon(){
   return (
     <svg
