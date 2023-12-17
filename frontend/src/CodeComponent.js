@@ -124,7 +124,7 @@ function renderer({ rows, stylesheet, useInlineStyles }) {
                position="left center">
           <form onSubmit={(e) => submitComment(i, e)}>
           <input name="commentField" className="commentField" type="text" />
-            <input className="btn" name="" type="submit" value="šabmit"/>
+            <input className="btn" name="" type="submit" value="submit"/>
           </form>
         </Popup>
       </span>
