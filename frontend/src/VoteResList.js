@@ -48,10 +48,8 @@ const VoteResList = ({ id, snippet_id  }) => {
 
   const fetchUsersCount = async () => {
     try {
-      console.log(snippet_id);
       const response = await fetch(`http://localhost:5000/snippet/${snippet_id}/user_count`);
       const data = await response.json();
-      console.log(data.count);
       setUserCount(data.count);
     } catch (error) {
       console.error('Error fetching voting results', error);
@@ -92,9 +90,9 @@ const VoteResList = ({ id, snippet_id  }) => {
 		{voteRes.map((voteR, index) => (
     <div key={index}>
       <VoteDetail voteRes={voteR} />
-      <p>{`Votes: ${voteRes.length} / Total Users: ${userCount}`}</p>
     </div>
   ))}
+    <p>{`Votes: ${voteRes.length} / Total Users: ${userCount}`}</p>
 		<button onClick={handleAccept}>Accept</button>
 		<button onClick={handleDecline}>Decline</button>
 

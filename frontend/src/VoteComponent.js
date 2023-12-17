@@ -24,13 +24,10 @@ const VoteComponent = ({ id }) => {
 		
 		// Listen for new votes
 		socket.on('votes', (newVotes) => {
-			console.log("DOSTAL JSEM: ", newVotes)
-
 			setVotes((votes) => [...votes, ...newVotes]);
 		  });
 
 		socket.on('acc-votes', (newAVotes) => {
-			console.log("DOSTAL JSEM: ", newAVotes)
 			setVotes((votes) => votes.filter((vote) => vote.id !== newAVotes));
 			fetchAVotes();
 		});
@@ -52,7 +49,6 @@ const VoteComponent = ({ id }) => {
 		try {
 			const response = await fetch(`http://localhost:5000/get-all-votes/${id}`);
 			const data = await response.json();
-			console.log(data);
 			setVotes(data);
 		} catch (error) {
 			console.error('Error fetching votes:', error);
@@ -62,7 +58,6 @@ const VoteComponent = ({ id }) => {
 		try {
 			const response = await fetch(`http://localhost:5000/get-accepted-votes/${id}`);
 			const data = await response.json();
-			console.log(data);
 			setAcceptedVotes(data);
 		} catch (error) {
 			console.error('Error fetching votes:', error);

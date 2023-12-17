@@ -23,7 +23,6 @@ const ChatComponent = ({ id }) => {
 
 		// Listen for new messages
 		socket.on('messages', (newMessages) => {
-			console.log("Received new message ", newMessages)
 			setMessages((messages) => [...messages, ...newMessages]);
 		});	
 		
@@ -33,7 +32,6 @@ const ChatComponent = ({ id }) => {
 		try {
 			const response = await fetch(`http://localhost:5000/get-all-messages/${id}`);
 			const data = await response.json();
-			console.log(data);
 			setMessages(data);
 			
 		  } catch (error) {
@@ -45,7 +43,6 @@ const ChatComponent = ({ id }) => {
 		try {
 		  const response = await fetch(`http://localhost:5000/user/${userId}/get-name/`);
 		  const newname = await response.json();
-		  console.log(newname.value);
 		  setUserName(newname.value);
 		} catch (error) {
 		  console.error('Error fetching name:', error);
