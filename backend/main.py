@@ -91,6 +91,10 @@ def deleteSnippet(snippet_id):
     socketio.emit('all-snippets', {'snippets': list(map(snippetToJsObj, c))}, to="{}".format(room_id))
     return jsonify(message="Snippet deleted")
 
+#   Funkce při mountu navrátí všechny zprávy v DB pro daný snippet
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @app.route("/get-all-messages/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_messages(snippet_id):
     # Retrieve all messages for the given snippet_id
@@ -98,6 +102,10 @@ def handle_get_all_messages(snippet_id):
     messages_data = [messageToJsObj(message) for message in messages]
     return jsonify(messages_data)
 
+#   Funkce vloží zprávu do DB a poté přes Socket aktualizuje live chat
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @socketio.on('send-message')
 def handle_send_message(data):
     name = data['name']
@@ -113,6 +121,10 @@ def handle_send_message(data):
     emit('messages', [messageToJsObj(s)] , broadcast=True)
     return messageToJsObj(s)
     
+#   Funkce vloží hlasování do DB s číslem řádku změny a poté přes Socket aktualizuje šablonu
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @socketio.on('add-comment')
 def handle_add_comment(data):
     vote_title = data['content']
@@ -126,7 +138,11 @@ def handle_add_comment(data):
     
     emit('votes', [voteToJsObj(s)] , broadcast=True)
     return voteToJsObj(s)
-    
+
+#   Funkce vloží hlasování do DB a poté přes Socket aktualizuje šablonu
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @socketio.on('start-vote')    
 def handle_new_vote(data):
     vote_title = data['vote_title']
@@ -140,6 +156,11 @@ def handle_new_vote(data):
     emit('votes', [voteToJsObj(s)] , broadcast=True)
     return voteToJsObj(s)
 
+#   Funkce přijme hlasování od uživatele, buďto jeho hlas vloží do DB nebo aktualizuje pro dané hlasování
+#   Po každém hlasu se rozhoduje jestli bude hlasování upraveno nebo smazáno podle počtu hlasů
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @socketio.on('accept-vote')
 @cross_origin()
 def handle_accept_vote(data):
@@ -147,8 +168,7 @@ def handle_accept_vote(data):
     user_id = data['user_id']
     vote_state = data['status']
 
-    #jakmile budu mit ten count tak jen udelat count kolik je votes a potom se udela delete, toto musi byt na konci teto funkce
-
+    #Pokud se jedna o prvni vote uzivatele, provede se vlozeni, jinak update
     
     existing_vote_count = db.session.query(func.count(Vote_result.id)) \
     .filter_by(vote_id=vote_id, user_id=user_id).scalar()
@@ -168,8 +188,8 @@ def handle_accept_vote(data):
 
         s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id).where(Vote_result.vote_id == vote_id))
 
-    #Pokud je pocet votu stejny jako pocet useru v projektu a vsechny jsou accepted tak se presune do accepted
-    #Musim prohodit tyto dve veci tu nahore a tu dole
+    #Pokud je pocet votes stejny jako pocet useru v projektu a vsechny jsou accepted tak se presune updatne v DB
+    #Pokud jsou vsechny declined tak se smaze z DB
 
     vote_q = Vote.query.filter_by(id=vote_id).first()
     snippet = Snippet.query.filter_by(id=vote_q.snippet_id).first()
@@ -189,7 +209,6 @@ def handle_accept_vote(data):
             db.session.delete(vote)
             db.session.connection().commit()
             emit('delete-vote', vote_id, broadcast=True)
-            return resultToJsObj(s)
 
         if( all_states_true ):
             vote = Vote.query.filter_by(id=vote_id).first()
@@ -199,13 +218,20 @@ def handle_accept_vote(data):
     emit('voteRes', resultToJsObj(s), broadcast=True)
     return resultToJsObj(s)
 
-
+#   Funkce při mountu navrátí všechny hlasy v DB pro dané hlasování
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @app.route("/get-all-results/<vote_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_results(vote_id):
     results = Vote_result.query.filter_by(vote_id=vote_id)
     results_data = [resultToJsObj(result) for result in results]
     return jsonify(results_data)
        
+#   Funkce při mountu navrátí všechny hlasování v DB pro daný snippet
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @app.route("/get-all-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_all_votes(snippet_id):
     votes = Vote.query.filter_by(snippet_id=snippet_id, active=True).all()
@@ -213,27 +239,16 @@ def handle_get_all_votes(snippet_id):
     votes_data = [voteToJsObj(vote) for vote in votes]
     return jsonify(votes_data)
 
+#   Funkce při mountu navrátí všechny hlasování v DB, které jsou odhlasovány
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 @app.route("/get-accepted-votes/<snippet_id>", methods=["GET"], strict_slashes=False)
 def handle_get_accepted_votes(snippet_id):
     votes = Vote.query.filter_by(snippet_id=snippet_id, active=False).all()
     #user = User.query.filer_by(id=data['userId']).all()
     votes_data = [voteToJsObj(vote) for vote in votes]
     return jsonify(votes_data)
-
-@app.route("/get-users/snippet/<snippet_id>", methods=["GET"], strict_slashes=False)
-def get_user_snippet_count(snippet_id):
-    # Query the count of users for a given snippet
-    user_count = (
-        db.session.query(func.count())
-        .select_from(project_user)
-        .join(User)
-        .join(Project)
-        .join(Snippet)
-        .filter(Snippet.id == snippet_id)
-        .scalar()
-    )
-
-    return jsonify({"user_count": user_count})
 
 @app.route("/create-user", methods=["POST"], strict_slashes=False)
 @cross_origin()
@@ -317,7 +332,7 @@ def get_projects(user_id):
             collab_projects.append(project)
     projects_json = []
     codes = []
-    for project in collab_projects:
+    for project in projects:
         code = ""
         if project.children != []:
             code = project.children[0].code
@@ -456,21 +471,3 @@ def users_in_project(snippet_id):
     project = Project.query.filter_by(id=snippet.project_id).first()
     #project.user je list userů  + 1 vlastník
     return jsonify(count=len(project.users) + 1)
-
-@app.route("/project/<project_id>/user/<user_id>/connect", methods=["POST"], strict_slashes=False)
-@cross_origin()
-def user_use_project(project_id,user_id):
-    project = Project.query.filter_by(id=project_id).first()
-    if(project == None):
-        return jsonify(connected=False)
-
-    users = User.query.all()
-
-    user = User.query.filter_by(id=user_id).first()
-    #pokud user nepouziva projekt stane se userem projektu, a nebude tam pridavat i creatora
-    if(not user in project.users and user.id != project.creator):
-        project.users.append(user)
-        db.session.add(project)
-        db.session.commit()
-        
-    return jsonify(connected=True)

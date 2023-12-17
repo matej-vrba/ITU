@@ -27,7 +27,7 @@ const VoteResList = ({ id, snippet_id  }) => {
       );
       updateVoteCount(voteRes, newResults);   
     };
-  
+
     socket.on('voteRes', handleVoteRes);
   
     return () => {

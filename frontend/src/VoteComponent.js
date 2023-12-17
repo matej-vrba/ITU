@@ -111,7 +111,7 @@ const VoteComponent = ({ id }) => {
 			<button onClick={handleVote}>Start Vote</button>
 			</div>
 		</div>
-		{acceptedVotes.length > 0 &&
+		{acceptedVotes &&
 		<div className="votes-section">
 			<h2>Accepted Votes</h2>
 			{acceptedVotes.map((acceptedVote, index) => (

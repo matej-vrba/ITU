@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "joi": "^17.11.0"
+    "joi": "^17.11.0",
+    "react-flash-message": "^1.0.8"
   }
 }
