@@ -45,13 +45,21 @@ class Project(db.Model):
     creator: Mapped[int] = mapped_column(ForeignKey("user.id"))
     users: Mapped[List[User]] = relationship(secondary=project_user)
 
+#   Třída sqlAlchemy pro ukládání zpráv
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 class Message(db.Model):
     __tablename__ = "message"
     id = db.Column(db.Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(256))
     snippet_id: Mapped[int] = mapped_column(ForeignKey("snippets.id"))
     message: Mapped[str] = mapped_column(String(256))
-    
+
+#   Třída sqlAlchemy pro ukládání hlasování
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15   
 class Vote(db.Model):
     __tablename__ = "vote"
     id = db.Column(db.Integer, primary_key=True)
@@ -60,7 +68,11 @@ class Vote(db.Model):
     created_by: Mapped[int] = mapped_column(ForeignKey("user.id"))
     snippet_id: Mapped[int] = mapped_column(ForeignKey("snippets.id"))
     active = db.Column(db.Boolean, default=True, nullable=False)
-    
+
+#   Třída sqlAlchemy pro ukládání hlasů uživatelů
+#   
+#   Autor: Martin Soukup
+#   Login: xsouku15
 class Vote_result(db.Model):
     __tablename__ = "vote_results"
     id = db.Column(db.Integer, primary_key=True)
@@ -68,27 +80,3 @@ class Vote_result(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     vote_state = db.Column(db.Boolean)
     
-    
-class Advertisment(db.Model):
-
-    def serialize(self):
-        return {
-            'id': self.id,
-            'title': self.title,
-            'description': self.description,
-            'price': self.price,
-            'owner': self.owner,
-            'city': self.city,
-            'street': self.street,
-            'address_number': self.address_number
-            # Přidejte další sloupce podle potřeby
-        }
-    __tablename__ = "advertisment"
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(50),nullable =False)
-    description = db.Column(db.String(50))
-    price = db.Column(db.Float)
-    owner = db.Column(db.Integer,db.ForeignKey('user.id'))
-    city = db.Column(db.String(50))
-    street = db.Column(db.String(50))
-    address_number = db.Column(db.Integer)

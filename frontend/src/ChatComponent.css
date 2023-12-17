@@ -1,0 +1,20 @@
+/**
+*   Author: Martin Soukup
+*   Login: xsouku15
+*
+*
+*/
+.comment {
+    position: relative;
+  }
+  
+  .comment textarea {
+    width: 100%; /* Use 100% width of the comment box */
+    box-sizing: border-box;
+  }
+  
+  .comment button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px; 
+  }
