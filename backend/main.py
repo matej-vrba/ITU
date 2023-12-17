@@ -317,7 +317,7 @@ def get_projects(user_id):
             collab_projects.append(project)
     projects_json = []
     codes = []
-    for project in projects:
+    for project in collab_projects:
         code = ""
         if project.children != []:
             code = project.children[0].code
@@ -456,3 +456,21 @@ def users_in_project(snippet_id):
     project = Project.query.filter_by(id=snippet.project_id).first()
     #project.user je list userů  + 1 vlastník
     return jsonify(count=len(project.users) + 1)
+
+@app.route("/project/<project_id>/user/<user_id>/connect", methods=["POST"], strict_slashes=False)
+@cross_origin()
+def user_use_project(project_id,user_id):
+    project = Project.query.filter_by(id=project_id).first()
+    if(project == None):
+        return jsonify(connected=False)
+
+    users = User.query.all()
+
+    user = User.query.filter_by(id=user_id).first()
+    #pokud user nepouziva projekt stane se userem projektu, a nebude tam pridavat i creatora
+    if(not user in project.users and user.id != project.creator):
+        project.users.append(user)
+        db.session.add(project)
+        db.session.commit()
+        
+    return jsonify(connected=True)

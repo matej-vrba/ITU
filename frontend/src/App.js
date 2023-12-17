@@ -1,10 +1,6 @@
 import { useState,useEffect, useContext } from 'react'
 import './App.scss';
 import './MainPage.scss';
-import Header from './Header';
-import Categories from './Categories';
-import ProductList from './ProductList';
-import Footer from './Footer';
 import CreateButtom from './CreateButton';
 import ConnectionInput from './ConnectionInput';
 import { Outlet } from "react-router-dom";
@@ -33,7 +29,6 @@ function App({children}) {
   return (
     <div className="App">
       <div className="main-container">
-        {/* <h1 className="main-title">Code2Gether</h1> */}
         <h1 className="main-title">
           Code<span className="highlighted-number">2</span>Gether
         </h1>

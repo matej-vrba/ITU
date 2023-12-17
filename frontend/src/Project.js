@@ -11,6 +11,7 @@ import { UserContext } from '.';
 import UserIcon from './icons/User';
 
 
+//transalted hash of project in url to project id
 export async function loader({ params }) {
   var hash = params.id;
   var actual_id = 0;
@@ -21,7 +22,6 @@ export async function loader({ params }) {
   progress.finish();
   socket.timeout(5000).emit('open-project', {projectId: actual_id.id});
   return {id:actual_id.id,hash:hash}
-  // return { id };
 }
 
 function Projects({params}) {
@@ -35,15 +35,13 @@ function Projects({params}) {
   const [userName, setUserName] = useState(null);
   const [projectData, setProjectData] = useState(null);
   const [newProjectName, setNewProjectName] = useState('');
-  const [isHovered, setIsHovered] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
-  const inputRef = useRef(null);
 
 
   useEffect(
     () => {
-      console.log("effect");
+
       //fetches almost all project data and store it in "projectData"
+      // author Ondřej Bahunek xbahou00
       const fetchData = async () => {
         try {
           const response = await fetch(`http://localhost:5000/project/${id}`);
@@ -56,6 +54,8 @@ function Projects({params}) {
         }
       };
 
+      //fetch user username by id
+      // author Ondřej Bahunek xbahou00
       const fetchUserName = async () => {
         try {
           const response = await fetch(`http://localhost:5000//user/${user_id}/get-name/`,{method:"GET"});
@@ -68,7 +68,29 @@ function Projects({params}) {
       };
       fetchData();
       fetchUserName();
+
+      //chech if user is part of project if not that set it up (for scenario when user connects to project with a link)
+      // author Ondřej Bahunek xbahou00
+      const userUsesProject = async () => {
+        try {
+          fetch(`http://localhost:5000//project/${id}/user/${user_id}/connect`,{method:"POST"})
+          .then(response => response.json())
+          .then(responseData => {
+          if(responseData['connected'] == false){
+            console.log('user added to project failed');
+          }
+          else{
+            console.log('user added to project succesed');
+          }
+          })
+        } catch (error) {
+          console.error('Error fetching project data:', error);
+          // Handle errors as needed
+        }
+      };
       
+    userUsesProject();
+
 
       // When socket gets disconnected, set state appropriately to
       // display or hide notice on top of the screen
