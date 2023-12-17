@@ -282,7 +282,7 @@ def get_projects(user_id):
             collab_projects.append(project)
     projects_json = []
     codes = []
-    for project in projects:
+    for project in collab_projects:
         code = ""
         if project.children != []:
             code = project.children[0].code

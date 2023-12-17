@@ -1,3 +1,5 @@
+// author Ondřej Bahunek xbahou00
+
 import React, { useState, useEffect,useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { UserContext } from '.';
@@ -7,6 +9,9 @@ import { monokai } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import TrashIcon from './icons/Trash';
 import {progress} from "./progress"
 
+
+//list of projects on the main page
+//fetches all the projects of the user and display them
 const ProjectList = () => {
     const user_id = useContext(UserContext);
     const navigate = useNavigate();
@@ -41,7 +46,7 @@ const ProjectList = () => {
                 {projects.map(project => (
                     <Link to={`/project/${project.hash}`} onClick={progress.start} key={project.id} className="project-icon">
                     <div className="project-overlay">
-                        {/* <Link onClick={() => del(project.id)} className='trash-icon'><TrashIcon/></Link> */}
+                        {/* if you onw the project you can delete him */}
                         {project.role === 'creator' && (
                             <Link onClick={() => del(project.id)} className="trash-icon">
                                 <TrashIcon />

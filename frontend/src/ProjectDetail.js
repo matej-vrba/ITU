@@ -1,6 +1,5 @@
 import { useLoaderData, useOutletContext, useNavigate } from "react-router-dom";
 import React, { useState,useEffect, useCallback  } from 'react';
-import './Categories.css';
 import {socket} from "./socket"
 import {progress} from "./progress"
 import SyntaxHighlighter from 'react-syntax-highlighter';

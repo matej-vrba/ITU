@@ -1,3 +1,7 @@
+// author Matěj Vrba xvrbam04
+// author Ondřej Bahunek xbahou00
+
+
 import {socket} from "./socket"
 import {progress} from "./progress"
 // Inline edit component

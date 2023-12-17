@@ -1,3 +1,5 @@
+// author Ondřej Bahunek xbahou00
+
 import React, { useState } from 'react';
 import UserAddIcon from './icons/UserAdd';
 import FlashMessage from 'react-flash-message'
@@ -11,6 +13,9 @@ const DropdownMenu = ({ onSelect }) => {
   );
 };
 
+// upon clinking on csv icon of a "add user" opens a choice
+// between joing joining with connection code or a link
+// after clicking on choice the code/link is copied to clipboard and message is flashed
 const IconClickable = ({hash}) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [flashMessage, setFlashMessage] = useState(null);

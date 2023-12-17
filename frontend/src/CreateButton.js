@@ -1,8 +1,11 @@
+// author Ondřej Bahunek xbahou00
+
 import React, { useContext } from 'react';
 import {  useNavigate } from "react-router-dom";
 import { UserContext } from '.'; // Adjust the path as needed
 import './MainPage.scss';
 
+//after clicking on "create" button user create empty project and is redirected
 const CreateButtom = () => {
   const user_id = useContext(UserContext);
   const navigate = useNavigate();

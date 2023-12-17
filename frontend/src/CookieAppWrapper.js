@@ -1,7 +1,14 @@
+// author Ondřej Bahunek xbahou00
+
+
 import React, { useEffect,useContext,createContext } from 'react';
 import { useCookies } from 'react-cookie';
 import { UserContext } from '.';
 
+//when user connect to the app
+// app check if he have set cookie with his id
+// if not set him one, and register him in db
+// after that cookie serves login credentials
 const AppWrapper = ({ children }) => {
   const [cookies, setCookie] = useCookies(['user_id']);
   let userId = cookies.user_id;
