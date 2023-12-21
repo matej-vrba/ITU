@@ -43,54 +43,34 @@ function Projects({params}) {
 
       //fetches almost all project data and store it in "projectData"
       // author Ondřej Bahunek xbahou00
-      const fetchData = async () => {
+      const fetchProjectData = async () => {
         try {
-          const response = await fetch(`http://localhost:5000/project/${id}`);
-          const data = await response.json();
-          setProjectData(data);
-          setNewProjectName(data.name);
-        } catch (error) {
-          console.error('Error fetching project data:', error);
-          // Handle errors as needed
-        }
-      };
-
-      //fetch user username by id
-      // author Ondřej Bahunek xbahou00
-      const fetchUserName = async () => {
-        try {
-          const response = await fetch(`http://localhost:5000//user/${user_id}/get-name/`,{method:"GET"});
-          const data = await response.json();
-          setUserName(data.value);
-        } catch (error) {
-          console.error('Error fetching project data:', error);
-          // Handle errors as needed
-        }
-      };
-      fetchData();
-      fetchUserName();
-
-      //chech if user is part of project if not that set it up (for scenario when user connects to project with a link)
-      // author Ondřej Bahunek xbahou00
-      const userUsesProject = async () => {
-        try {
+          fetch(`http://localhost:5000/project/${id}`)
+            .then(data => data.json())
+            .then(data => {
+              setProjectData(data);
+              setNewProjectName(data.name);
+            });
+          //fetch user username by id
+          fetch(`http://localhost:5000//user/${user_id}/get-name/`,{method:"GET"})
+            .then(data => data.json())
+            .then(data => {
+              setUserName(data.value);
+            });
+          //chech if user is part of project if not that set it up (for scenario when user connects to project with a link)
           fetch(`http://localhost:5000//project/${id}/user/${user_id}/connect`,{method:"POST"})
-          .then(response => response.json())
-          .then(responseData => {
-          if(responseData['connected'] == false){
-            console.log('user added to project failed');
-          }
-          else{
-            console.log('user added to project succesed');
-          }
-          })
+            .then(response => response.json())
+            .then(responseData => {
+              if(responseData['connected'] == false){
+                console.log('failed to add user to project');
+              }
+            })
         } catch (error) {
           console.error('Error fetching project data:', error);
           // Handle errors as needed
         }
       };
-      
-    userUsesProject();
+      fetchProjectData();
 
 
       // When socket gets disconnected, set state appropriately to
