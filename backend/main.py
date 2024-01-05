@@ -12,6 +12,7 @@ from app.models import User,Project,project_user
 import asyncio
 import secrets
 import string
+import sys
 from random_username.generate import generate_username
 
 app = create_app()
@@ -189,7 +190,6 @@ def handle_accept_vote(data):
         s = db.session.scalar(select(Vote_result).where(Vote_result.user_id == user_id).where(Vote_result.vote_id == vote_id))
 
     #Pokud jsou vsechny declined tak se nastavi na aktivita na false
-
     vote_q = Vote.query.filter_by(id=vote_id).first()
     snippet = Snippet.query.filter_by(id=vote_q.snippet_id).first()
     project = Project.query.filter_by(id=snippet.project_id).first()
@@ -200,15 +200,33 @@ def handle_accept_vote(data):
     if(count == vote_res_count):
         all_states_false = all(vote_result.vote_state == False for vote_result in vote_results)
         all_states_true = all(vote_result.vote_state == True for vote_result in vote_results)
-        if( all_states_false ):
+        if(all_states_true):
+            update_code(vote_q.snippet_id, vote_q.code_line, vote_q.vote_title)
+        if( all_states_false or all_states_true):
             db.session.connection().execute(update(Vote).where(Vote.id == bindparam("v_id")),
                                     [{"v_id": vote_id, 'active': False}])
             db.session.connection().commit()
             emit('delete-vote', vote_id, broadcast=True)
 
-
     emit('voteRes', resultToJsObj(s), broadcast=True)
     return resultToJsObj(s)
+
+def update_code(snippet_id, line, changed_line):
+    s = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first()
+    code = s.code.split('\n')
+    new_code = code[0 : line-1] + [changed_line] + code[line: ]
+
+    # Tento syntax dava smysl... rekl nikdo
+    new_code = "\n".join(new_code)
+
+    db.session.connection().execute(update(Snippet).where(Snippet.id == bindparam("s_id")),
+                                    [{"s_id": snippet_id, "code": new_code}])
+    db.session.connection().commit()
+
+    room_id = db.session.scalars(select(Snippet).where(Snippet.id.is_(snippet_id))).first().project_id
+    s.code = new_code
+    print(s.code, file=sys.stderr)
+    emit('snippet-set-code', snippetToJsObj(s), to="{}".format(room_id))
 
 #   Funkce při mountu navrátí všechny hlasy v DB pro dané hlasování
 #   
