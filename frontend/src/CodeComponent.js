@@ -97,6 +97,18 @@ export default function CodeComponent({children}){
 function renderer({ rows, stylesheet, useInlineStyles }) {
   const { id } = useLoaderData();
   const [cookies] = useCookies(['user_id']);
+  const [code, setCode] = useState([]);
+  useEffect(()=>{
+    fetch('http://localhost:5000/snippets/' + id,{
+      'methods':'GET'
+    })
+      .then(response => response.json())
+      .then(response => {
+        setCode(response['code'])
+      })
+    .catch(error => console.log(error))
+  },[id])
+
   let user_id = cookies.user_id
   const submitComment = useCallback((lineNumber, e) => {
     e.preventDefault();
@@ -123,7 +135,9 @@ function renderer({ rows, stylesheet, useInlineStyles }) {
                  {<button>+</button>}
                position="left center">
           <form onSubmit={(e) => submitComment(i, e)}>
-          <input name="commentField" className="commentField" type="text" />
+            <textarea cols="30" id="" name="" rows="2" name="commentField" className="commentField">
+              {code ? (code + '').split('\n')[i] : ''}
+            </textarea>
             <input className="btn" name="" type="submit" value="submit"/>
           </form>
         </Popup>
