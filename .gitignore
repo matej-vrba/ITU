@@ -25,3 +25,4 @@ instance/
 
 /Zadani.pdf
 /backend/itu_data.db
+/backend/.mypy_cache/
