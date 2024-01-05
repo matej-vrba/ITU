@@ -134,12 +134,13 @@ function renderer({ rows, stylesheet, useInlineStyles }) {
         <Popup trigger=
                  {<button>+</button>}
                position="left center">
-          <form onSubmit={(e) => submitComment(i, e)}>
-            <textarea cols="30" id="" name="" rows="2" name="commentField" className="commentField">
+          {close =>
+          <form onSubmit={(e) => {close();submitComment(i, e);  }}>
+            <textarea cols="40" id="" name="" rows="2" name="commentField" className="commentField">
               {code ? (code + '').split('\n')[i] : ''}
             </textarea>
             <input className="btn" name="" type="submit" value="submit"/>
-          </form>
+          </form>}
         </Popup>
       </span>
     </span>
