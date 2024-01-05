@@ -1,0 +1,8 @@
+.popup-overlay {
+	backdrop-filter: blur(7px);
+}
+.popup-content {
+	background: var(--bg-3);
+	padding: 0.5em 0.25em;
+	box-shadow: 10px 10px 0px 0px var(--bg-4);
+}

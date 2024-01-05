@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import React, { useState,useEffect  } from 'react';
 import VoteResList from './VoteResList';
 import './VoteComponent.css';
+import VoteDiff from './VoteDiff';
 
 const VoteComponent = ({ id }) => {
 	const [votes, setVotes] = useState([]);
@@ -96,7 +97,9 @@ const VoteComponent = ({ id }) => {
 				</>
 				) : (
 				<>
-					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`} <VoteResList id={vote.id} snippet_id={id} /></p>
+					<p>{`Update Line ${vote.code_line}: ${vote.vote_title}`}
+                    <VoteDiff snippet_id={id} vote_id={vote.id}/>
+                      <VoteResList id={vote.id} snippet_id={id} /></p>
 				</>
 				)}
 			</div>
