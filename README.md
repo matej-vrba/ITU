@@ -1,73 +1,52 @@
-# Nastavení prostředí
-Pro prvotní nastavení prostředí slouží `setup.sh`, ten potřebuje `npm`, `pip`, `python` a možná další
+# 🧑‍💻 Collaborative Coding Web App
 
-# DB
-db s testovymi daty se inicializuje `./init_db.sh`
+This project is a web application built with **React (frontend)** and **Python Flask (backend)** that allows users to create collaborative coding sessions with their friends. Within a session, users can:
 
-# Spuštění
-Pro spuštění by mělo stačit `npm run dev`, web je pak dostupný na `127.0.0.1:5100`
+- 👨‍💻 Code 
+- 💬 Use a live chat  
+- 📊 Create and vote in polls on code changes  
 
+## 🙌 Authors
 
+- **Matěj Vrba**
+- **Ondřej Bahounek**
+- **Martin Soukup**
 
-# db testy
-`source backend/venv/bin/activate`
-`python3 backend/init_db.py`
-`deactivate`
+---
 
-# Použité knihovny
+## 🚀 Getting Started
 
-## NPM
-viz. frontend/project.json
+### Environment Setup
 
-- @badrap/bar-of-progress
-- @testing-library/jest-dom
-- @testing-library/react
-- @testing-library/user-event
-- react
-- react-cookie
-- react-dom
-- react-router-dom
-- react-scripts
-- react-select
-- react-syntax-highlighter
-- reactjs-popup
-- sass
-- socket.io-client
-- web-vitals
-- react-flash-message
-- foreman
+Use the provided `setup.sh` script to install dependencies. You'll need to have the following installed:
 
-## pip
-viz. backend/requirements.txt
+- `npm`
+- `pip`
+- `python`  
+(and possibly other common tools)
 
-- bidict
-- blinker
-- certifi
-- charset-normalizer
-- click
-- docopt
-- Flask
-- Flask-Cors
-- Flask-SocketIO
-- Flask-SQLAlchemy
-- greenlet
-- h11
-- idna
-- iniconfig
-- itsdangerous
-- Jinja2
-- MarkupSafe
-- packaging
-- pluggy
-- pytest
-- python-engineio
-- python-socketio
-- requests
-- simple-websocket
-- SQLAlchemy
-- typing_extensions
-- urllib3
-- Werkzeug
-- wsproto
-- yarg
-- random-username
+```bash
+./setup.sh
+```
+### 🗃️ Database
+To initialize the database with test data:
+
+```bash
+./init_db.sh
+```
+To manually run DB tests:
+```bash
+source backend/venv/bin/activate
+python3 backend/init_db.py
+deactivate
+```
+
+### 🧑‍💻 Running the App
+To start the development server:
+```bash
+npm run dev
+```
+The web app will be available at:
+📍 http://127.0.0.1:5100
+
+![img](old_screenshot.png)
